@@ -22,9 +22,17 @@ export default function RegisterPage() {
     setMessage('')
 
     const supabase = createClient()
-    const cleanUsername = username.toLowerCase().replace(/[^a-z0-9_]/g, '')
+    const cleanUsername = username
+      .toLowerCase()
+      .replace(/[^a-z0-9_]/g, '')
 
-    // Cukup signUp — profile dibuat otomatis oleh trigger
+    if (cleanUsername.length < 3) {
+      setLoading(false)
+      setError('Username minimal 3 karakter (huruf/angka/underscore)')
+      return
+    }
+
+    // 1) Buat akun — profile dibuat trigger
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -42,9 +50,10 @@ export default function RegisterPage() {
       return
     }
 
-    // Kalau session langsung ada (email confirm dimatiin), update username/display_name
+    // 2) Kalau langsung dapat session (confirm email OFF)
     if (data.user && data.session) {
-      await supabase
+      // Coba rapikan username (kalau profile sudah ada dari trigger)
+      const { error: updateError } = await supabase
         .from('profiles')
         .update({
           username: cleanUsername,
@@ -52,17 +61,32 @@ export default function RegisterPage() {
         })
         .eq('id', data.user.id)
 
+      // Kalau update gagal karena row belum ada, coba insert (policy sudah diizinkan)
+      if (updateError) {
+        const { error: insertError } = await supabase.from('profiles').insert({
+          id: data.user.id,
+          username: cleanUsername,
+          display_name: displayName || cleanUsername,
+          role: 'client',
+          skills: [],
+        })
+
+        if (insertError) {
+          setLoading(false)
+          setError(insertError.message)
+          return
+        }
+      }
+
       setLoading(false)
       router.push('/client')
       router.refresh()
       return
     }
 
-    // Kalau email confirmation masih nyala
+    // 3) Confirm email masih ON
     setLoading(false)
-    setMessage(
-      'Akun berhasil dibuat. Cek email untuk konfirmasi, lalu login.'
-    )
+    setMessage('Akun dibuat. Cek email untuk konfirmasi, lalu login.')
   }
 
   return (
