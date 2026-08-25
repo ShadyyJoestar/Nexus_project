@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { getRedirectPath } from '@/lib/auth'
+import type { UserRole } from '@/types/database'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -10,7 +12,6 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
-      // Cek role
       const {
         data: { user },
       } = await supabase.auth.getUser()
@@ -22,13 +23,9 @@ export async function GET(request: Request) {
           .eq('id', user.id)
           .single()
 
-        if (profile?.role === 'admin') {
-          return NextResponse.redirect(`${origin}/admin`)
-        }
+        const path = getRedirectPath(profile?.role as UserRole)
+        return NextResponse.redirect(`${origin}${path}`)
       }
-
-      // Default: ke home
-      return NextResponse.redirect(`${origin}/`)
     }
   }
 

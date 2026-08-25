@@ -2,37 +2,53 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { getRedirectPath } from '@/lib/auth'
+import type { UserRole } from '@/types/database'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    setMessage('')
     setError('')
 
     const supabase = createClient()
 
-    const { error } = await supabase.auth.signInWithOtp({
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
+      password,
     })
 
-    setLoading(false)
-
-    if (error) {
-      setError(error.message)
+    if (signInError) {
+      setLoading(false)
+      setError(signInError.message)
       return
     }
 
-    setMessage('Cek email kamu! Kita udah kirim link login.')
+    // Ambil role dari profiles
+    const userId = data.user?.id
+    if (!userId) {
+      setLoading(false)
+      setError('User tidak ditemukan')
+      return
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', userId)
+      .single()
+
+    setLoading(false)
+    router.push(getRedirectPath(profile?.role as UserRole))
+    router.refresh()
   }
 
   return (
@@ -43,7 +59,7 @@ export default function LoginPage() {
             Nexus
           </Link>
           <p className="mt-2 text-sm text-zinc-400">
-            Login pake email buat masuk ke CodeClass
+            Login ke CodeClass
           </p>
         </div>
 
@@ -63,24 +79,35 @@ export default function LoginPage() {
             className="mb-4 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-indigo-500"
           />
 
-          {error && (
-            <p className="mb-4 text-sm text-red-400">{error}</p>
-          )}
-          {message && (
-            <p className="mb-4 text-sm text-emerald-400">{message}</p>
-          )}
+          <label className="mb-2 block text-sm font-medium text-zinc-300">
+            Password
+          </label>
+          <input
+            type="password"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Minimal 6 karakter"
+            className="mb-4 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-indigo-500"
+          />
+
+          {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
             className="w-full rounded-lg bg-indigo-500 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
           >
-            {loading ? 'Mengirim...' : 'Kirim Link Login'}
+            {loading ? 'Loading...' : 'Login'}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-zinc-500">
-          Cek email kamu, dan klik link yang dikirim buat login. <br />
+          Belum punya akun?{' '}
+          <Link href="/register" className="text-indigo-400 hover:underline">
+            Daftar
+          </Link>
         </p>
       </div>
     </main>

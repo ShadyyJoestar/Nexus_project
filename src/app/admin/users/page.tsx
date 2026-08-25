@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { RoleSelect } from './roleselect'
 
 export default async function AdminUsersPage() {
   const supabase = await createClient()
@@ -12,7 +13,8 @@ export default async function AdminUsersPage() {
     <div>
       <h1 className="text-2xl font-bold">Users</h1>
       <p className="mt-1 text-zinc-400">
-        Semua member & client. Ubah role lewat database dulu (sementara).
+        Ubah role user di sini. Client → Member biar dia masuk ke halaman member
+        saat login lagi.
       </p>
 
       <div className="mt-8 overflow-hidden rounded-xl border border-zinc-800">
@@ -22,7 +24,6 @@ export default async function AdminUsersPage() {
               <th className="px-4 py-3 font-medium">Username</th>
               <th className="px-4 py-3 font-medium">Nama</th>
               <th className="px-4 py-3 font-medium">Role</th>
-              <th className="px-4 py-3 font-medium">GitHub</th>
               <th className="px-4 py-3 font-medium">Joined</th>
             </tr>
           </thead>
@@ -36,31 +37,7 @@ export default async function AdminUsersPage() {
                   <td className="px-4 py-3">@{user.username}</td>
                   <td className="px-4 py-3">{user.display_name}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                        user.role === 'admin'
-                          ? 'bg-indigo-500/20 text-indigo-300'
-                          : user.role === 'client'
-                            ? 'bg-amber-500/20 text-amber-300'
-                            : 'bg-zinc-700 text-zinc-300'
-                      }`}
-                    >
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-zinc-500">
-                    {user.github_url ? (
-                      <a
-                        href={user.github_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-indigo-400 hover:underline"
-                      >
-                        Link
-                      </a>
-                    ) : (
-                      '—'
-                    )}
+                    <RoleSelect userId={user.id} currentRole={user.role} />
                   </td>
                   <td className="px-4 py-3 text-zinc-500">
                     {new Date(user.created_at).toLocaleDateString('id-ID')}
@@ -69,10 +46,7 @@ export default async function AdminUsersPage() {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={5}
-                  className="px-4 py-8 text-center text-zinc-500"
-                >
+                <td colSpan={4} className="px-4 py-8 text-center text-zinc-500">
                   Belum ada user
                 </td>
               </tr>
