@@ -10,10 +10,27 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (!error) {
-      // Langsung ke home (pending sudah dibuang)
+      // Cek role
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single()
+
+        if (profile?.role === 'admin') {
+          return NextResponse.redirect(`${origin}/admin`)
+        }
+      }
+
+      // Default: ke home
       return NextResponse.redirect(`${origin}/`)
     }
   }
 
   return NextResponse.redirect(`${origin}/login`)
-}   
+}
