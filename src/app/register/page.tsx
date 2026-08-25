@@ -13,18 +13,27 @@ export default function RegisterPage() {
   const [displayName, setDisplayName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
     setError('')
+    setMessage('')
 
     const supabase = createClient()
+    const cleanUsername = username.toLowerCase().replace(/[^a-z0-9_]/g, '')
 
-    // 1. Buat akun auth
+    // Cukup signUp — profile dibuat otomatis oleh trigger
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username: cleanUsername,
+          display_name: displayName || cleanUsername,
+        },
+      },
     })
 
     if (signUpError) {
@@ -33,34 +42,27 @@ export default function RegisterPage() {
       return
     }
 
-    const userId = data.user?.id
-    if (!userId) {
+    // Kalau session langsung ada (email confirm dimatiin), update username/display_name
+    if (data.user && data.session) {
+      await supabase
+        .from('profiles')
+        .update({
+          username: cleanUsername,
+          display_name: displayName || cleanUsername,
+        })
+        .eq('id', data.user.id)
+
       setLoading(false)
-      setError('Gagal membuat akun')
+      router.push('/client')
+      router.refresh()
       return
     }
 
-    // 2. Buat profile (default role: client)
-    const cleanUsername = username.toLowerCase().replace(/[^a-z0-9_]/g, '')
-
-    const { error: profileError } = await supabase.from('profiles').insert({
-      id: userId,
-      username: cleanUsername,
-      display_name: displayName || cleanUsername,
-      role: 'client',
-      skills: [],
-    })
-
-    if (profileError) {
-      setLoading(false)
-      setError(profileError.message)
-      return
-    }
-
+    // Kalau email confirmation masih nyala
     setLoading(false)
-    // User baru = client
-    router.push('/client')
-    router.refresh()
+    setMessage(
+      'Akun berhasil dibuat. Cek email untuk konfirmasi, lalu login.'
+    )
   }
 
   return (
@@ -128,6 +130,7 @@ export default function RegisterPage() {
           />
 
           {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
+          {message && <p className="mb-4 text-sm text-emerald-400">{message}</p>}
 
           <button
             type="submit"
