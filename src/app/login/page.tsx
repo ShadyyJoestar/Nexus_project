@@ -80,8 +80,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-zinc-500">
-          Setelah login, akun kamu bakal ditinjau admin dulu
-          sebelum bisa akses penuh.
+          Cek email kamu, dan klik link yang dikirim buat login. <br />
         </p>
       </div>
     </main>
