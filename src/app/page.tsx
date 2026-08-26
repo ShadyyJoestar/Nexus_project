@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Navbar from '@/components/navbar'
+import Container from '@/components/container'
 
 export default function Home() {
   return (
@@ -8,82 +9,80 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* soft blobs */}
-        <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-sky-200/50 blur-3xl" />
-        <div className="pointer-events-none absolute -right-16 top-40 h-64 w-64 rounded-full bg-teal-200/40 blur-3xl" />
-        <div className="pointer-events-none absolute bottom-0 left-1/3 h-48 w-48 rounded-full bg-emerald-100/60 blur-3xl" />
+        <div className="pointer-events-none absolute -left-20 top-8 h-56 w-56 rounded-full bg-sky-200/50 blur-3xl sm:h-72 sm:w-72" />
+        <div className="pointer-events-none absolute -right-12 top-32 h-48 w-48 rounded-full bg-teal-200/40 blur-3xl sm:h-64 sm:w-64" />
+        <div className="pointer-events-none absolute bottom-0 left-1/4 h-40 w-40 rounded-full bg-emerald-100/60 blur-3xl" />
 
-        <div className="relative mx-auto flex max-w-6xl flex-col items-start px-6 pb-24 pt-16 sm:pt-24">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-600">
+        <Container className="relative pb-16 pt-10 sm:pb-24 sm:pt-16 lg:pt-20">
+          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-sky-600 sm:mb-4 sm:text-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
             CodeClass Community Platform
           </p>
 
-          <h1 className="max-w-3xl text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+          <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
             Tempat member CodeClass
-            <span className="block bg-gradient-to-r from-sky-500 to-teal-400 bg-clip-text text-transparent">
+            <span className="mt-1 block bg-gradient-to-r from-sky-500 to-teal-400 bg-clip-text text-transparent sm:mt-0">
               nunjukin karya coding-nya
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
+          <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 sm:mt-6 sm:text-lg sm:leading-8">
             Punya profil developer sendiri, kumpulin project, kasih link GitHub
             & demo — biar komunitas bisa saling lihat progress dan inspirasi.
           </p>
 
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:flex-wrap">
             <Link
               href="/register"
-              className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-6 py-3.5 text-sm font-semibold text-white shadow-md shadow-sky-200 transition hover:from-sky-600 hover:to-teal-500"
+              className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-6 py-3.5 text-center text-sm font-semibold text-white shadow-md shadow-sky-200 transition hover:from-sky-600 hover:to-teal-500"
             >
               Mulai gratis
             </Link>
             <Link
               href="/members"
-              className="rounded-xl border border-sky-200 bg-white px-6 py-3.5 text-sm font-semibold text-sky-700 transition hover:border-sky-300 hover:bg-sky-50"
+              className="rounded-xl border border-sky-200 bg-white px-6 py-3.5 text-center text-sm font-semibold text-sky-700 transition hover:border-sky-300 hover:bg-sky-50"
             >
               Lihat members
             </Link>
           </div>
 
-          {/* mini stats */}
-          <div className="mt-14 flex flex-wrap gap-6 text-sm text-slate-500">
+          <div className="mt-10 flex flex-col gap-3 text-sm text-slate-500 sm:mt-14 sm:flex-row sm:flex-wrap sm:gap-6">
             <div className="flex items-center gap-2">
-              <span className="rounded-md bg-sky-100 px-2 py-1 font-semibold text-sky-700">
+              <span className="rounded-md bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-700 sm:text-sm">
                 Profile
               </span>
-              <span>Username, bio, skills</span>
+              <span className="text-xs sm:text-sm">Username, bio, skills</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="rounded-md bg-teal-100 px-2 py-1 font-semibold text-teal-700">
+              <span className="rounded-md bg-teal-100 px-2 py-1 text-xs font-semibold text-teal-700 sm:text-sm">
                 Projects
               </span>
-              <span>Showcase + GitHub</span>
+              <span className="text-xs sm:text-sm">Showcase + GitHub</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="rounded-md bg-emerald-100 px-2 py-1 font-semibold text-emerald-700">
+              <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 sm:text-sm">
                 Community
               </span>
-              <span>CodeClass members</span>
+              <span className="text-xs sm:text-sm">CodeClass members</span>
             </div>
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* Features */}
       <section className="border-t border-sky-50 bg-gradient-to-b from-sky-50/80 to-white">
-        <div className="mx-auto max-w-6xl px-6 py-20">
+        <Container className="py-12 sm:py-16 lg:py-20">
           <div className="max-w-2xl">
-            <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+            <h2 className="text-xl font-bold text-slate-900 sm:text-2xl lg:text-3xl">
               Bukan cuma landing page komunitas
             </h2>
-            <p className="mt-3 text-slate-600">
-              Nexus dibuat biar setiap member punya ruang sendiri buat
-              nunjukin perjalanan coding-nya.
+            <p className="mt-2 text-sm text-slate-600 sm:mt-3 sm:text-base">
+              Nexus dibuat biar setiap member punya ruang sendiri buat nunjukin
+              perjalanan coding-nya.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             <FeatureCard
               title="Developer profile"
               desc="Username, avatar, bio, skills, dan link GitHub dalam satu halaman."
@@ -100,31 +99,31 @@ export default function Home() {
               accent="emerald"
             />
           </div>
-        </div>
+        </Container>
       </section>
 
       {/* CTA */}
       <section className="border-t border-sky-50">
-        <div className="mx-auto max-w-6xl px-6 py-20">
-          <div className="rounded-3xl bg-gradient-to-r from-sky-500 via-sky-400 to-teal-400 px-8 py-12 text-center text-white shadow-lg shadow-sky-200/50 sm:px-12">
-            <h2 className="text-2xl font-bold sm:text-3xl">
+        <Container className="py-12 sm:py-16 lg:py-20">
+          <div className="rounded-2xl bg-gradient-to-r from-sky-500 via-sky-400 to-teal-400 px-6 py-10 text-center text-white shadow-lg shadow-sky-200/50 sm:rounded-3xl sm:px-12 sm:py-12">
+            <h2 className="text-xl font-bold sm:text-2xl lg:text-3xl">
               Siap nunjukin project kamu?
             </h2>
-            <p className="mx-auto mt-3 max-w-lg text-sky-50">
+            <p className="mx-auto mt-2 max-w-lg text-sm text-sky-50 sm:mt-3 sm:text-base">
               Daftar sekarang, lengkapi profil, terus publish karya pertama kamu
               di Nexus.
             </p>
             <Link
               href="/register"
-              className="mt-8 inline-block rounded-xl bg-white px-6 py-3 text-sm font-semibold text-sky-600 transition hover:bg-sky-50"
+              className="mt-6 inline-block rounded-xl bg-white px-6 py-3 text-sm font-semibold text-sky-600 transition hover:bg-sky-50 sm:mt-8"
             >
               Buat akun Nexus
             </Link>
           </div>
-        </div>
+        </Container>
       </section>
 
-      <footer className="border-t border-sky-100 py-8 text-center text-sm text-slate-400">
+      <footer className="border-t border-sky-100 py-6 text-center text-xs text-slate-400 sm:py-8 sm:text-sm">
         Nexus · CodeClass Community
       </footer>
     </div>
@@ -148,9 +147,9 @@ function FeatureCard({
         : 'from-emerald-400 to-emerald-500'
 
   return (
-    <div className="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm shadow-sky-100/50">
-      <div className={`mb-4 h-1 w-12 rounded-full bg-gradient-to-r ${bar}`} />
-      <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+    <div className="rounded-2xl border border-sky-100 bg-white p-5 shadow-sm shadow-sky-100/50 sm:p-6">
+      <div className={`mb-3 h-1 w-10 rounded-full bg-gradient-to-r ${bar} sm:mb-4 sm:w-12`} />
+      <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{title}</h3>
       <p className="mt-2 text-sm leading-6 text-slate-600">{desc}</p>
     </div>
   )
