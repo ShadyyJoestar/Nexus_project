@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import Navbar from '@/components/navbar'
 import Container from '@/components/container'
-
-
+import { Analytics } from "@vercel/analytics/next"
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-white text-slate-800">
       <Navbar />
+      <Analytics />
 
       {/* Hero */}
       <section className="relative overflow-hidden">
