@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Navbar from '@/components/navbar'
 import Container from '@/components/container'
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from '@vercel/analytics/next'
 
 export default function Home() {
   return (
@@ -15,115 +15,119 @@ export default function Home() {
         <div className="pointer-events-none absolute -right-12 top-32 h-48 w-48 rounded-full bg-teal-200/40 blur-3xl sm:h-64 sm:w-64" />
         <div className="pointer-events-none absolute bottom-0 left-1/4 h-40 w-40 rounded-full bg-emerald-100/60 blur-3xl" />
 
-        <Container className="relative pb-16 pt-10 sm:pb-24 sm:pt-16 lg:pt-20">
-          <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-sky-600 sm:mb-4 sm:text-xs">
+        <Container className="relative pb-16 pt-10 sm:pb-24 sm:pt-16 lg:pt-24">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-sky-600 sm:text-xs">
             <span className="h-1.5 w-1.5 rounded-full bg-teal-400" />
-            CodeClass Community Platform
+            CodeClass
           </p>
 
-          <h1 className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-            Discover work built by
-            <span className="mt-1 block bg-gradient-to-r from-sky-500 to-teal-400 bg-clip-text text-transparent sm:mt-0">
-              CodeClass developers
-            </span>
+          <h1 className="max-w-4xl text-4xl font-bold leading-[1.08] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+            See what{' '}
+            <span className="bg-gradient-to-r from-sky-500 to-teal-400 bg-clip-text text-transparent">
+              CodeClass
+            </span>{' '}
+            is building.
           </h1>
 
-          <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 sm:mt-6 sm:text-lg sm:leading-8">
-            Nexus is the official home for CodeClass members to showcase their
-            projects, share their profiles, and grow as developers — and for
-            visitors to explore what the community is building.
+          <p className="mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:mt-6 sm:text-lg sm:leading-8">
+            Nexus is where CodeClass members share who they are, what they
+            build, and where to find their work. Explore projects, discover
+            developers, and put your own work on display.
           </p>
 
-          <div className="mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:flex-wrap">
+          <div className="mt-8 flex w-full flex-col gap-3 sm:mt-10 sm:w-auto sm:flex-row">
             <Link
               href="/projects"
               className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-6 py-3.5 text-center text-sm font-semibold text-white shadow-md shadow-sky-200 transition hover:from-sky-600 hover:to-teal-500"
             >
               Explore projects
             </Link>
+
             <Link
               href="/register"
-              className="rounded-xl border border-sky-200 bg-white px-6 py-3.5 text-center text-sm font-semibold text-sky-700 transition hover:border-sky-300 hover:bg-sky-50"
+              className="rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-center text-sm font-semibold text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
             >
-              Join CodeClass
+              Create your profile
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-col gap-3 text-sm text-slate-500 sm:mt-14 sm:flex-row sm:flex-wrap sm:gap-6">
-            <div className="flex items-center gap-2">
-              <span className="rounded-md bg-sky-100 px-2 py-1 text-xs font-semibold text-sky-700 sm:text-sm">
-                Browse
-              </span>
-              <span className="text-xs sm:text-sm">
-                View member projects & profiles
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="rounded-md bg-teal-100 px-2 py-1 text-xs font-semibold text-teal-700 sm:text-sm">
-                Showcase
-              </span>
-              <span className="text-xs sm:text-sm">
-                Publish your own work
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="rounded-md bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700 sm:text-sm">
-                Connect
-              </span>
-              <span className="text-xs sm:text-sm">
-                Be part of the community
-              </span>
-            </div>
+          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-slate-100 pt-6 text-sm text-slate-500 sm:mt-14 sm:pt-7">
+            <span>
+              <strong className="font-semibold text-slate-700">Profiles</strong>{' '}
+              from CodeClass members
+            </span>
+            <span>
+              <strong className="font-semibold text-slate-700">Projects</strong>{' '}
+              with GitHub & live demos
+            </span>
+            <span>
+              <strong className="font-semibold text-slate-700">One place</strong>{' '}
+              to find the community
+            </span>
           </div>
         </Container>
       </section>
 
-      {/* Two paths */}
-      <section className="border-t border-sky-50 bg-gradient-to-b from-sky-50/80 to-white">
-        <Container className="py-12 sm:py-16 lg:py-20">
+      {/* Explore / Build */}
+      <section className="border-t border-slate-100 bg-slate-50/60">
+        <Container className="py-14 sm:py-18 lg:py-20">
           <div className="max-w-2xl">
-            <h2 className="text-xl font-bold text-slate-900 sm:text-2xl lg:text-3xl">
-              Two ways to engage
+            <p className="text-sm font-semibold text-sky-600">Nexus</p>
+
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              A place for the work behind CodeClass.
             </h2>
-            <p className="mt-2 text-sm text-slate-600 sm:mt-3 sm:text-base">
-              Whether you are exploring or building, Nexus is designed for both
-              visitors and CodeClass members.
+
+            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
+              Some people come here to see what others are making. Others come
+              to share their own work. Nexus gives both sides a place to start.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6">
-            <div className="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm shadow-sky-100/50 sm:p-8">
-              <div className="mb-4 h-1 w-12 rounded-full bg-gradient-to-r from-sky-400 to-sky-500" />
-              <h3 className="text-lg font-semibold text-slate-900">
-                Explore the work
+          <div className="mt-8 grid gap-5 sm:mt-12 sm:grid-cols-2">
+            <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md sm:p-8">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sm font-bold text-sky-600">
+                01
+              </div>
+
+              <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                Explore what members build
               </h3>
+
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Browse projects built by CodeClass members — from learning
-                experiments to production-ready apps. See the stack, the repo,
-                and the live demo.
+                Browse projects from CodeClass members and see the technologies,
+                repositories, and live demos behind them.
               </p>
+
               <Link
                 href="/projects"
-                className="mt-5 inline-block text-sm font-semibold text-sky-600 hover:underline"
+                className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-sky-600 transition group-hover:gap-2"
               >
-                View projects →
+                Browse projects
+                <span aria-hidden="true">→</span>
               </Link>
             </div>
 
-            <div className="rounded-2xl border border-teal-100 bg-white p-6 shadow-sm shadow-teal-100/50 sm:p-8">
-              <div className="mb-4 h-1 w-12 rounded-full bg-gradient-to-r from-teal-400 to-teal-500" />
-              <h3 className="text-lg font-semibold text-slate-900">
-                Join as a member
+            <div className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-md sm:p-8">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-sm font-bold text-teal-600">
+                02
+              </div>
+
+              <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                Put your work out there
               </h3>
+
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Create your developer profile, list your skills, and publish
-                the projects you have built. Grow with the CodeClass community.
+                Create your CodeClass profile, add your skills, and keep the
+                projects you are proud of in one place.
               </p>
+
               <Link
                 href="/register"
-                className="mt-5 inline-block text-sm font-semibold text-teal-600 hover:underline"
+                className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-teal-600 transition group-hover:gap-2"
               >
-                Create an account →
+                Create your profile
+                <span aria-hidden="true">→</span>
               </Link>
             </div>
           </div>
@@ -131,99 +135,111 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="border-t border-sky-50">
-        <Container className="py-12 sm:py-16 lg:py-20">
+      <section className="border-t border-slate-100">
+        <Container className="py-14 sm:py-18 lg:py-20">
           <div className="max-w-2xl">
-            <h2 className="text-xl font-bold text-slate-900 sm:text-2xl lg:text-3xl">
-              Built for a developer community
+            <p className="text-sm font-semibold text-sky-600">What you can do</p>
+
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+              Your profile. Your projects. Your work.
             </h2>
-            <p className="mt-2 text-sm text-slate-600 sm:mt-3 sm:text-base">
-              Nexus is more than a directory — it is a shared space for
-              CodeClass to present real work.
+
+            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
+              Nexus keeps the important parts of your developer profile
+              together, without turning it into another complicated dashboard.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 sm:mt-12 sm:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
-              title="Member profiles"
-              desc="Each member has a public profile with skills, bio, and links — so the community can learn who is behind the work."
-              accent="sky"
+              number="01"
+              title="Build your profile"
+              desc="Tell people who you are, what you work with, and where they can find you."
             />
+
             <FeatureCard
-              title="Project showcase"
-              desc="Publish projects with description, tech stack, GitHub repository, and live demo in one clean card."
-              accent="teal"
+              number="02"
+              title="Show your projects"
+              desc="Add the projects you have built with descriptions, tech stacks, GitHub repositories, and live demos."
             />
+
             <FeatureCard
-              title="Community visibility"
-              desc="Visitors can explore what CodeClass is building. Members can stay accountable and inspired by each other."
-              accent="emerald"
+              number="03"
+              title="Discover other members"
+              desc="Find developers from CodeClass, explore their work, and see what the community is working on."
             />
           </div>
         </Container>
       </section>
 
       {/* CTA */}
-      <section className="border-t border-sky-50 bg-gradient-to-b from-white to-sky-50/50">
-        <Container className="py-12 sm:py-16 lg:py-20">
-          <div className="rounded-2xl bg-gradient-to-r from-sky-500 via-sky-400 to-teal-400 px-6 py-10 text-center text-white shadow-lg shadow-sky-200/50 sm:rounded-3xl sm:px-12 sm:py-12">
-            <h2 className="text-xl font-bold sm:text-2xl lg:text-3xl">
-              Ready to join CodeClass on Nexus?
-            </h2>
-            <p className="mx-auto mt-2 max-w-lg text-sm text-sky-50 sm:mt-3 sm:text-base">
-              Create your account, set up your profile, and start showcasing
-              the projects you build with the community.
-            </p>
-            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row">
-              <Link
-                href="/register"
-                className="inline-block rounded-xl bg-white px-6 py-3 text-sm font-semibold text-sky-600 transition hover:bg-sky-50"
-              >
-                Join CodeClass
-              </Link>
-              <Link
-                href="/projects"
-                className="inline-block rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/20"
-              >
-                Browse projects
-              </Link>
+      <section className="border-t border-slate-100">
+        <Container className="py-14 sm:py-18 lg:py-20">
+          <div className="overflow-hidden rounded-3xl bg-slate-900 px-6 py-10 text-white sm:px-12 sm:py-12 lg:px-16">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold text-sky-300">
+                For CodeClass members
+              </p>
+
+              <h2 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
+                Got something you built?
+                <br />
+                Put it on Nexus.
+              </h2>
+
+              <p className="mt-4 max-w-xl text-sm leading-6 text-slate-300 sm:text-base sm:leading-7">
+                Set up your profile, add your projects, and give your work a
+                place people can actually find.
+              </p>
+
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/register"
+                  className="rounded-xl bg-white px-6 py-3 text-center text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
+                >
+                  Create your profile
+                </Link>
+
+                <Link
+                  href="/projects"
+                  className="rounded-xl border border-slate-700 px-6 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-800"
+                >
+                  Explore projects
+                </Link>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
-      <footer className="border-t border-sky-100 py-6 text-center text-xs text-slate-400 sm:py-8 sm:text-sm">
-        Nexus · Official community platform for CodeClass
+      <footer className="border-t border-slate-100 py-6 text-center text-xs text-slate-400 sm:py-8 sm:text-sm">
+        Nexus · CodeClass
       </footer>
     </div>
   )
 }
 
 function FeatureCard({
+  number,
   title,
   desc,
-  accent,
 }: {
+  number: string
   title: string
   desc: string
-  accent: 'sky' | 'teal' | 'emerald'
 }) {
-  const bar =
-    accent === 'sky'
-      ? 'from-sky-400 to-sky-500'
-      : accent === 'teal'
-        ? 'from-teal-400 to-teal-500'
-        : 'from-emerald-400 to-emerald-500'
-
   return (
-    <div className="rounded-2xl border border-sky-100 bg-white p-5 shadow-sm shadow-sky-100/50 sm:p-6">
-      <div
-        className={`mb-3 h-1 w-10 rounded-full bg-gradient-to-r ${bar} sm:mb-4 sm:w-12`}
-      />
-      <h3 className="text-base font-semibold text-slate-900 sm:text-lg">
+    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:p-7">
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-50 text-xs font-bold text-slate-500">
+        {number}
+      </div>
+
+      <h3 className="mt-5 text-base font-semibold text-slate-900 sm:text-lg">
         {title}
       </h3>
+
       <p className="mt-2 text-sm leading-6 text-slate-600">{desc}</p>
     </div>
   )
 }
+
