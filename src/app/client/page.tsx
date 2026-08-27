@@ -2,17 +2,17 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Profile, Project } from '@/types/database'
+import Navbar from '@/components/navbar'
+import Container from '@/components/container'
+import { PageShell, Card, Badge } from '@/components/ui'
 
 export default async function ClientPage() {
   const supabase = await createClient()
-
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) {
-    redirect('/login')
-  }
+  if (!user) redirect('/login')
 
   const { data: membersData } = await supabase
     .from('profiles')
@@ -53,108 +53,86 @@ export default async function ClientPage() {
   >[]
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-white">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-        <Link href="/" className="text-lg font-semibold">
-          Nexus
-        </Link>
-        <span className="rounded-full bg-amber-500/20 px-3 py-1 text-xs text-amber-300">
-          Client
-        </span>
-      </nav>
+    <PageShell>
+      <Navbar />
+      <Container className="py-8 sm:py-12">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+              Community
+            </h1>
+            <p className="mt-1 text-sm text-slate-500 sm:text-base">
+              Lihat member CodeClass dan project mereka.
+            </p>
+          </div>
+          <Badge tone="amber">Role: client</Badge>
+        </div>
 
-      <div className="mx-auto max-w-6xl px-6 pb-16">
-        <h1 className="text-3xl font-bold">Community</h1>
-        <p className="mt-2 text-zinc-400">
-          Daftar member CodeClass dan project mereka. Role kamu masih{' '}
-          <strong className="text-amber-300">client</strong> — admin bisa ubah
-          jadi member nanti.
-        </p>
-
-        {/* Members */}
         <section className="mt-10">
-          <h2 className="text-xl font-semibold">Members</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Members</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {members.length > 0 ? (
               members.map((m) => {
                 const skills = m.skills ?? []
-
                 return (
-                  <div
-                    key={m.id}
-                    className="rounded-xl border border-zinc-800 bg-zinc-900 p-5"
-                  >
-                    <p className="font-semibold">{m.display_name}</p>
-                    <p className="text-sm text-zinc-500">@{m.username}</p>
-
+                  <Card key={m.id}>
+                    <p className="font-semibold text-slate-900">
+                      {m.display_name}
+                    </p>
+                    <p className="text-sm text-sky-600">@{m.username}</p>
                     {m.bio ? (
-                      <p className="mt-2 line-clamp-2 text-sm text-zinc-400">
+                      <p className="mt-2 line-clamp-2 text-sm text-slate-500">
                         {m.bio}
                       </p>
                     ) : null}
-
                     {skills.length > 0 ? (
-                      <div className="mt-3 flex flex-wrap gap-1">
+                      <div className="mt-3 flex flex-wrap gap-1.5">
                         {skills.map((s) => (
-                          <span
-                            key={s}
-                            className="rounded bg-zinc-800 px-2 py-0.5 text-xs text-zinc-300"
-                          >
+                          <Badge key={s} tone="slate">
                             {s}
-                          </span>
+                          </Badge>
                         ))}
                       </div>
                     ) : null}
-                  </div>
+                  </Card>
                 )
               })
             ) : (
-              <p className="text-zinc-500">Belum ada member.</p>
+              <p className="text-sm text-slate-500">Belum ada member.</p>
             )}
           </div>
         </section>
 
-        {/* Projects */}
         <section className="mt-12">
-          <h2 className="text-xl font-semibold">Projects</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Projects</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {projects.length > 0 ? (
               projects.map((p) => {
-                const techStack = p.tech_stack ?? []
-
+                const tech = p.tech_stack ?? []
                 return (
-                  <div
-                    key={p.id}
-                    className="rounded-xl border border-zinc-800 bg-zinc-900 p-5"
-                  >
-                    <p className="font-semibold">{p.title}</p>
-
+                  <Card key={p.id}>
+                    <p className="font-semibold text-slate-900">{p.title}</p>
                     {p.description ? (
-                      <p className="mt-2 line-clamp-2 text-sm text-zinc-400">
+                      <p className="mt-2 line-clamp-2 text-sm text-slate-500">
                         {p.description}
                       </p>
                     ) : null}
-
-                    {techStack.length > 0 ? (
-                      <div className="mt-3 flex flex-wrap gap-1">
-                        {techStack.map((t) => (
-                          <span
-                            key={t}
-                            className="rounded bg-indigo-500/20 px-2 py-0.5 text-xs text-indigo-300"
-                          >
+                    {tech.length > 0 ? (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {tech.map((t) => (
+                          <Badge key={t} tone="teal">
                             {t}
-                          </span>
+                          </Badge>
                         ))}
                       </div>
                     ) : null}
-
                     <div className="mt-4 flex gap-3 text-sm">
                       {p.github_url ? (
                         <a
                           href={p.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-indigo-400 hover:underline"
+                          className="font-medium text-sky-600 hover:underline"
                         >
                           GitHub
                         </a>
@@ -164,21 +142,21 @@ export default async function ClientPage() {
                           href={p.live_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-indigo-400 hover:underline"
+                          className="font-medium text-teal-600 hover:underline"
                         >
                           Live
                         </a>
                       ) : null}
                     </div>
-                  </div>
+                  </Card>
                 )
               })
             ) : (
-              <p className="text-zinc-500">Belum ada project.</p>
+              <p className="text-sm text-slate-500">Belum ada project.</p>
             )}
           </div>
         </section>
-      </div>
-    </main>
+      </Container>
+    </PageShell>
   )
 }

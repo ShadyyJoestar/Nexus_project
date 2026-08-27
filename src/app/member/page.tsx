@@ -1,10 +1,11 @@
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import Navbar from '@/components/navbar'
+import Container from '@/components/container'
+import { PageShell, Card, Badge } from '@/components/ui'
 
 export default async function MemberPage() {
   const supabase = await createClient()
-
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -27,49 +28,58 @@ export default async function MemberPage() {
     .eq('profile_id', user.id)
     .order('created_at', { ascending: false })
 
-  return (
-    <main className="min-h-screen bg-zinc-950 text-white">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-        <Link href="/" className="text-lg font-semibold">
-          Nexus
-        </Link>
-        <span className="rounded-full bg-indigo-500/20 px-3 py-1 text-xs text-indigo-300">
-          Member
-        </span>
-      </nav>
+  const skills = profile.skills ?? []
 
-      <div className="mx-auto max-w-6xl px-6 pb-16">
-        <h1 className="text-3xl font-bold">
-          Halo, {profile.display_name}
-        </h1>
-        <p className="mt-1 text-zinc-400">@{profile.username}</p>
-        {profile.bio && (
-          <p className="mt-4 max-w-xl text-zinc-300">{profile.bio}</p>
-        )}
+  return (
+    <PageShell>
+      <Navbar />
+      <Container className="py-8 sm:py-12">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+                {profile.display_name}
+              </h1>
+              <Badge tone="teal">Member</Badge>
+            </div>
+            <p className="mt-1 text-sky-600">@{profile.username}</p>
+            {profile.bio ? (
+              <p className="mt-3 max-w-xl text-slate-600">{profile.bio}</p>
+            ) : null}
+            {skills.length > 0 ? (
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                {skills.map((s: string) => (
+                  <Badge key={s} tone="sky">
+                    {s}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+          </div>
+        </div>
 
         <section className="mt-10">
-          <h2 className="text-xl font-semibold">Project kamu</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Project kamu</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {projects && projects.length > 0 ? (
               projects.map((p) => (
-                <div
-                  key={p.id}
-                  className="rounded-xl border border-zinc-800 bg-zinc-900 p-5"
-                >
-                  <p className="font-semibold">{p.title}</p>
-                  {p.description && (
-                    <p className="mt-2 text-sm text-zinc-400">{p.description}</p>
-                  )}
-                </div>
+                <Card key={p.id}>
+                  <p className="font-semibold text-slate-900">{p.title}</p>
+                  {p.description ? (
+                    <p className="mt-2 text-sm text-slate-500">{p.description}</p>
+                  ) : null}
+                </Card>
               ))
             ) : (
-              <p className="text-zinc-500">
-                Belum ada project. (Nanti bisa ditambah dari dashboard member)
-              </p>
+              <Card>
+                <p className="text-sm text-slate-500">
+                  Belum ada project. Nanti bisa ditambah dari dashboard member.
+                </p>
+              </Card>
             )}
           </div>
         </section>
-      </div>
-    </main>
+      </Container>
+    </PageShell>
   )
 }

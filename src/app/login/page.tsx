@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { getRedirectPath } from '@/lib/auth'
 import type { UserRole } from '@/types/database'
+import { AuthShell, Input, PrimaryButton } from '@/components/ui'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -20,7 +21,6 @@ export default function LoginPage() {
     setError('')
 
     const supabase = createClient()
-
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -32,7 +32,6 @@ export default function LoginPage() {
       return
     }
 
-    // Ambil role dari profiles
     const userId = data.user?.id
     if (!userId) {
       setLoading(false)
@@ -52,64 +51,41 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-6 text-white">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <Link href="/" className="text-xl font-semibold tracking-tight">
-            Nexus
-          </Link>
-          <p className="mt-2 text-sm text-zinc-400">
-            Login ke CodeClass
-          </p>
-        </div>
-
-        <form
-          onSubmit={handleLogin}
-          className="rounded-2xl border border-zinc-800 bg-zinc-900 p-8"
-        >
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
-            Email
-          </label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="nama@email.com"
-            className="mb-4 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-indigo-500"
-          />
-
-          <label className="mb-2 block text-sm font-medium text-zinc-300">
-            Password
-          </label>
-          <input
-            type="password"
-            required
-            minLength={6}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Minimal 6 karakter"
-            className="mb-4 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-indigo-500"
-          />
-
-          {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-indigo-500 py-3 font-medium text-white transition hover:bg-indigo-400 disabled:opacity-50"
-          >
-            {loading ? 'Loading...' : 'Login'}
-          </button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-zinc-500">
+    <AuthShell
+      title="Login"
+      subtitle="Masuk ke CodeClass"
+      footer={
+        <>
           Belum punya akun?{' '}
-          <Link href="/register" className="text-indigo-400 hover:underline">
+          <Link href="/register" className="font-medium text-sky-600 hover:underline">
             Daftar
           </Link>
-        </p>
-      </div>
-    </main>
+        </>
+      }
+    >
+      <form onSubmit={handleLogin}>
+        <Input
+          label="Email"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="nama@email.com"
+        />
+        <Input
+          label="Password"
+          type="password"
+          required
+          minLength={6}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Minimal 6 karakter"
+        />
+        {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+        <PrimaryButton type="submit" disabled={loading}>
+          {loading ? 'Loading...' : 'Login'}
+        </PrimaryButton>
+      </form>
+    </AuthShell>
   )
 }

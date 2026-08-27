@@ -42,7 +42,7 @@ export function RoleSelect({
       value={role}
       disabled={loading}
       onChange={(e) => handleChange(e.target.value)}
-      className="rounded-lg border border-zinc-700 bg-zinc-950 px-2 py-1 text-sm text-white outline-none focus:border-indigo-500"
+      className="rounded-lg border border-sky-100 bg-white px-2 py-1.5 text-sm text-slate-700 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
     >
       <option value="client">client</option>
       <option value="member">member</option>
