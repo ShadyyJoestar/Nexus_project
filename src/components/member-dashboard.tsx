@@ -51,7 +51,8 @@ export default function MemberDashboard({
   projects: initialProjects,
 }: Props) {
   const router = useRouter()
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+  const thumbInputRef = useRef<HTMLInputElement>(null)
   const [projects, setProjects] = useState<Project[]>(initialProjects)
 
   // Profile
@@ -75,9 +76,9 @@ export default function MemberDashboard({
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [thumbnailUrl, setThumbnailUrl] = useState('')
-  const [projectUrl, setProjectUrl] = useState('')
+  const [thumbFile, setThumbFile] = useState<File | null>(null)
+  const [thumbPreview, setThumbPreview] = useState<string | null>(null)
   const [githubProject, setGithubProject] = useState('')
-  const [liveUrl, setLiveUrl] = useState('')
   const [techText, setTechText] = useState('')
   const [status, setStatus] = useState<ProjectStatus>('published')
   const [projectLoading, setProjectLoading] = useState(false)
@@ -85,11 +86,11 @@ export default function MemberDashboard({
   const [projectMsg, setProjectMsg] = useState('')
 
   const shownAvatar = avatarPreview || avatarUrl
+  const shownThumb = thumbPreview || thumbnailUrl
 
   function onPickAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-
     if (!file.type.startsWith('image/')) {
       setProfileError('File harus berupa gambar (JPG, PNG, WebP, atau GIF).')
       return
@@ -98,7 +99,6 @@ export default function MemberDashboard({
       setProfileError('Ukuran foto maksimal 2MB.')
       return
     }
-
     setProfileError('')
     setAvatarFile(file)
     setAvatarPreview(URL.createObjectURL(file))
@@ -108,7 +108,30 @@ export default function MemberDashboard({
     setAvatarFile(null)
     if (avatarPreview) URL.revokeObjectURL(avatarPreview)
     setAvatarPreview(null)
-    if (fileInputRef.current) fileInputRef.current.value = ''
+    if (avatarInputRef.current) avatarInputRef.current.value = ''
+  }
+
+  function onPickThumb(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (!file.type.startsWith('image/')) {
+      setProjectError('Thumbnail harus berupa gambar.')
+      return
+    }
+    if (file.size > 3 * 1024 * 1024) {
+      setProjectError('Ukuran thumbnail maksimal 3MB.')
+      return
+    }
+    setProjectError('')
+    setThumbFile(file)
+    setThumbPreview(URL.createObjectURL(file))
+  }
+
+  function clearThumbPick() {
+    setThumbFile(null)
+    if (thumbPreview) URL.revokeObjectURL(thumbPreview)
+    setThumbPreview(null)
+    if (thumbInputRef.current) thumbInputRef.current.value = ''
   }
 
   async function uploadAvatarIfNeeded(): Promise<string | null> {
@@ -126,12 +149,34 @@ export default function MemberDashboard({
         cacheControl: '3600',
       })
 
-    if (uploadError) {
-      throw new Error(uploadError.message)
-    }
+    if (uploadError) throw new Error(uploadError.message)
 
     const { data } = supabase.storage.from('avatars').getPublicUrl(path)
-    // cache-bust supaya preview langsung ganti
+    return `${data.publicUrl}?t=${Date.now()}`
+  }
+
+  async function uploadThumbIfNeeded(
+    projectId: string
+  ): Promise<string | null> {
+    if (!thumbFile) return emptyToNull(thumbnailUrl)
+
+    const supabase = createClient()
+    const ext = thumbFile.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const path = `${profile.id}/${projectId}.${ext}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('project-thumbnails')
+      .upload(path, thumbFile, {
+        upsert: true,
+        contentType: thumbFile.type,
+        cacheControl: '3600',
+      })
+
+    if (uploadError) throw new Error(uploadError.message)
+
+    const { data } = supabase.storage
+      .from('project-thumbnails')
+      .getPublicUrl(path)
     return `${data.publicUrl}?t=${Date.now()}`
   }
 
@@ -140,9 +185,8 @@ export default function MemberDashboard({
     setTitle('')
     setDescription('')
     setThumbnailUrl('')
-    setProjectUrl('')
+    clearThumbPick()
     setGithubProject('')
-    setLiveUrl('')
     setTechText('')
     setStatus('published')
     setProjectError('')
@@ -160,9 +204,8 @@ export default function MemberDashboard({
     setTitle(p.title)
     setDescription(p.description ?? '')
     setThumbnailUrl(p.thumbnail_url ?? '')
-    setProjectUrl(p.project_url ?? '')
+    clearThumbPick()
     setGithubProject(p.github_url ?? '')
-    setLiveUrl(p.live_url ?? '')
     setTechText((p.tech_stack ?? []).join(', '))
     setStatus(p.status ?? 'published')
     setProjectError('')
@@ -178,7 +221,6 @@ export default function MemberDashboard({
 
     try {
       const nextAvatarUrl = await uploadAvatarIfNeeded()
-
       const supabase = createClient()
       const { error } = await supabase
         .from('profiles')
@@ -195,7 +237,6 @@ export default function MemberDashboard({
 
       if (error) {
         setProfileError(error.message)
-        setProfileLoading(false)
         return
       }
 
@@ -224,57 +265,97 @@ export default function MemberDashboard({
     setProjectMsg('')
 
     const supabase = createClient()
-    const payload = {
-      title: title.trim(),
-      description: emptyToNull(description),
-      thumbnail_url: emptyToNull(thumbnailUrl),
-      project_url: emptyToNull(projectUrl),
-      github_url: emptyToNull(githubProject),
-      live_url: emptyToNull(liveUrl),
-      tech_stack: parseList(techText),
-      status,
-      updated_at: new Date().toISOString(),
-    }
 
-    if (editingId) {
-      const { data, error } = await supabase
-        .from('projects')
-        .update(payload)
-        .eq('id', editingId)
-        .eq('profile_id', profile.id)
-        .select('*')
-        .single()
+    try {
+      if (editingId) {
+        const nextThumb = await uploadThumbIfNeeded(editingId)
+        const { data, error } = await supabase
+          .from('projects')
+          .update({
+            title: title.trim(),
+            description: emptyToNull(description),
+            thumbnail_url: nextThumb,
+            github_url: emptyToNull(githubProject),
+            tech_stack: parseList(techText),
+            status,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', editingId)
+          .eq('profile_id', profile.id)
+          .select('*')
+          .single()
 
-      setProjectLoading(false)
-      if (error) {
-        setProjectError(error.message)
-        return
+        if (error) {
+          setProjectError(error.message)
+          setProjectLoading(false)
+          return
+        }
+
+        setProjects((prev) =>
+          prev.map((p) => (p.id === editingId ? (data as Project) : p))
+        )
+        setProjectMsg('Project berhasil diupdate.')
+      } else {
+        // Insert dulu supaya punya id, lalu upload thumbnail
+        const { data: created, error: insertError } = await supabase
+          .from('projects')
+          .insert({
+            profile_id: profile.id,
+            title: title.trim(),
+            description: emptyToNull(description),
+            thumbnail_url: null,
+            github_url: emptyToNull(githubProject),
+            tech_stack: parseList(techText),
+            status,
+          })
+          .select('*')
+          .single()
+
+        if (insertError || !created) {
+          setProjectError(insertError?.message || 'Gagal membuat project.')
+          setProjectLoading(false)
+          return
+        }
+
+        let finalProject = created as Project
+
+        if (thumbFile) {
+          const nextThumb = await uploadThumbIfNeeded(created.id)
+          const { data: updated, error: updateError } = await supabase
+            .from('projects')
+            .update({
+              thumbnail_url: nextThumb,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', created.id)
+            .eq('profile_id', profile.id)
+            .select('*')
+            .single()
+
+          if (updateError) {
+            setProjectError(updateError.message)
+            setProjects((prev) => [finalProject, ...prev])
+            setProjectLoading(false)
+            resetProjectForm()
+            router.refresh()
+            return
+          }
+          finalProject = updated as Project
+        }
+
+        setProjects((prev) => [finalProject, ...prev])
+        setProjectMsg('Project berhasil ditambahkan.')
       }
-      setProjects((prev) =>
-        prev.map((p) => (p.id === editingId ? (data as Project) : p))
+
+      resetProjectForm()
+      router.refresh()
+    } catch (err) {
+      setProjectError(
+        err instanceof Error ? err.message : 'Gagal menyimpan project.'
       )
-      setProjectMsg('Project berhasil diupdate.')
-    } else {
-      const { data, error } = await supabase
-        .from('projects')
-        .insert({
-          ...payload,
-          profile_id: profile.id,
-        })
-        .select('*')
-        .single()
-
+    } finally {
       setProjectLoading(false)
-      if (error) {
-        setProjectError(error.message)
-        return
-      }
-      setProjects((prev) => [data as Project, ...prev])
-      setProjectMsg('Project berhasil ditambahkan.')
     }
-
-    resetProjectForm()
-    router.refresh()
   }
 
   async function handleDeleteProject(id: string, projectTitle: string) {
@@ -343,7 +424,6 @@ export default function MemberDashboard({
         </p>
         <Card className="mt-4">
           <form onSubmit={handleSaveProfile}>
-            {/* Foto profil */}
             <div className="mb-5">
               <label className="mb-1.5 block text-sm font-medium text-slate-700">
                 Foto profil
@@ -364,7 +444,7 @@ export default function MemberDashboard({
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={() => avatarInputRef.current?.click()}
                     className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
                   >
                     Pilih foto
@@ -381,7 +461,7 @@ export default function MemberDashboard({
                 </div>
               </div>
               <input
-                ref={fileInputRef}
+                ref={avatarInputRef}
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/gif"
                 className="hidden"
@@ -447,7 +527,7 @@ export default function MemberDashboard({
         </Card>
       </section>
 
-      {/* Projects — sama seperti sebelumnya */}
+      {/* Projects */}
       <section>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -516,20 +596,59 @@ export default function MemberDashboard({
                   ))}
                 </select>
               </div>
-              <Input
-                label="Thumbnail URL (opsional)"
-                type="url"
-                value={thumbnailUrl}
-                onChange={(e) => setThumbnailUrl(e.target.value)}
-                placeholder="https://..."
-              />
-              <Input
-                label="Project URL (opsional)"
-                type="url"
-                value={projectUrl}
-                onChange={(e) => setProjectUrl(e.target.value)}
-                placeholder="https://..."
-              />
+
+              {/* Thumbnail file */}
+              <div className="mb-4">
+                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                  Thumbnail (opsional)
+                </label>
+                <div className="flex flex-wrap items-center gap-4">
+                  {shownThumb ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={shownThumb}
+                      alt="Thumbnail preview"
+                      className="h-20 w-32 rounded-xl object-cover ring-1 ring-sky-100"
+                    />
+                  ) : (
+                    <div className="flex h-20 w-32 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400">
+                      Tidak ada gambar
+                    </div>
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => thumbInputRef.current?.click()}
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
+                    >
+                      Pilih gambar
+                    </button>
+                    {thumbFile || thumbnailUrl ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          clearThumbPick()
+                          setThumbnailUrl('')
+                        }}
+                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-50"
+                      >
+                        Hapus
+                      </button>
+                    ) : null}
+                  </div>
+                </div>
+                <input
+                  ref={thumbInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={onPickThumb}
+                />
+                <p className="mt-2 text-xs text-slate-400">
+                  Screenshot / cover project. JPG, PNG, WebP, GIF. Maks 3MB.
+                </p>
+              </div>
+
               <Input
                 label="GitHub URL (opsional)"
                 type="url"
@@ -537,13 +656,7 @@ export default function MemberDashboard({
                 onChange={(e) => setGithubProject(e.target.value)}
                 placeholder="https://github.com/user/repo"
               />
-              <Input
-                label="Live Demo URL (opsional)"
-                type="url"
-                value={liveUrl}
-                onChange={(e) => setLiveUrl(e.target.value)}
-                placeholder="https://..."
-              />
+
               {projectError ? (
                 <p className="mb-3 text-sm text-red-500">{projectError}</p>
               ) : null}
@@ -611,16 +724,6 @@ export default function MemberDashboard({
                     </div>
                   ) : null}
                   <div className="mt-3 flex flex-wrap gap-3 text-sm">
-                    {p.project_url ? (
-                      <a
-                        href={p.project_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-slate-600 hover:underline"
-                      >
-                        Project
-                      </a>
-                    ) : null}
                     {p.github_url ? (
                       <a
                         href={p.github_url}
@@ -629,16 +732,6 @@ export default function MemberDashboard({
                         className="font-medium text-sky-600 hover:underline"
                       >
                         GitHub
-                      </a>
-                    ) : null}
-                    {p.live_url ? (
-                      <a
-                        href={p.live_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-teal-600 hover:underline"
-                      >
-                        Live Demo
                       </a>
                     ) : null}
                   </div>

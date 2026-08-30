@@ -62,11 +62,10 @@ export default async function MemberProfilePage({ params }: Props) {
     | 'created_at'
   >
 
-  // Hanya project milik profile ini
   const { data: projectsData } = await supabase
     .from('projects')
     .select(
-      'id, profile_id, title, description, thumbnail_url, project_url, github_url, live_url, tech_stack, status, created_at'
+      'id, profile_id, title, description, thumbnail_url, github_url, tech_stack, status, created_at'
     )
     .eq('profile_id', profile.id)
     .order('created_at', { ascending: false })
@@ -78,9 +77,7 @@ export default async function MemberProfilePage({ params }: Props) {
     | 'title'
     | 'description'
     | 'thumbnail_url'
-    | 'project_url'
     | 'github_url'
-    | 'live_url'
     | 'tech_stack'
     | 'status'
     | 'created_at'
@@ -215,18 +212,8 @@ export default async function MemberProfilePage({ params }: Props) {
                         ))}
                       </div>
                     ) : null}
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {p.project_url ? (
-                        <a
-                          href={p.project_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
-                        >
-                          Project
-                        </a>
-                      ) : null}
-                      {p.github_url ? (
+                    {p.github_url ? (
+                      <div className="mt-4">
                         <a
                           href={p.github_url}
                           target="_blank"
@@ -235,18 +222,8 @@ export default async function MemberProfilePage({ params }: Props) {
                         >
                           GitHub
                         </a>
-                      ) : null}
-                      {p.live_url ? (
-                        <a
-                          href={p.live_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-lg bg-gradient-to-r from-sky-500 to-teal-400 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition hover:from-sky-600 hover:to-teal-500"
-                        >
-                          Live Demo
-                        </a>
-                      ) : null}
-                    </div>
+                      </div>
+                    ) : null}
                   </Card>
                 )
               })
