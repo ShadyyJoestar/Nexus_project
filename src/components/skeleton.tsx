@@ -60,3 +60,50 @@ export function ProjectsGridSkeleton({ count = 4 }: { count?: number }) {
     </div>
   )
 }
+
+export function ProfileHeaderSkeleton() {
+  return (
+    <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+      <div className="flex items-start gap-4">
+        <Skeleton className="h-16 w-16 rounded-2xl sm:h-20 sm:w-20" />
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-40" />
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="mt-2 h-4 w-64 max-w-full" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function PageTitleSkeleton() {
+  return (
+    <div className="max-w-2xl space-y-2">
+      <Skeleton className="h-4 w-20" />
+      <Skeleton className="h-8 w-48" />
+      <Skeleton className="h-4 w-72 max-w-full" />
+    </div>
+  )
+}
+
+export function FormSkeleton() {
+  return (
+    <div className="rounded-2xl border border-sky-100 bg-white p-5 shadow-sm sm:p-6">
+      <div className="space-y-4">
+        <div>
+          <Skeleton className="mb-2 h-3 w-24" />
+          <Skeleton className="h-11 w-full rounded-xl" />
+        </div>
+        <div>
+          <Skeleton className="mb-2 h-3 w-16" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+        </div>
+        <div>
+          <Skeleton className="mb-2 h-3 w-28" />
+          <Skeleton className="h-11 w-full rounded-xl" />
+        </div>
+        <Skeleton className="h-11 w-36 rounded-xl" />
+      </div>
+    </div>
+  )
+}
