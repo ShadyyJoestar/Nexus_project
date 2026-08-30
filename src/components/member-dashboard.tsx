@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -51,12 +51,15 @@ export default function MemberDashboard({
   projects: initialProjects,
 }: Props) {
   const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [projects, setProjects] = useState<Project[]>(initialProjects)
 
   // Profile
   const [displayName, setDisplayName] = useState(profile.display_name ?? '')
   const [bio, setBio] = useState(profile.bio ?? '')
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url ?? '')
+  const [avatarFile, setAvatarFile] = useState<File | null>(null)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [githubUrl, setGithubUrl] = useState(profile.github_url ?? '')
   const [websiteUrl, setWebsiteUrl] = useState(profile.website_url ?? '')
   const [skillsText, setSkillsText] = useState(
@@ -80,6 +83,57 @@ export default function MemberDashboard({
   const [projectLoading, setProjectLoading] = useState(false)
   const [projectError, setProjectError] = useState('')
   const [projectMsg, setProjectMsg] = useState('')
+
+  const shownAvatar = avatarPreview || avatarUrl
+
+  function onPickAvatar(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      setProfileError('File harus berupa gambar (JPG, PNG, WebP, atau GIF).')
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setProfileError('Ukuran foto maksimal 2MB.')
+      return
+    }
+
+    setProfileError('')
+    setAvatarFile(file)
+    setAvatarPreview(URL.createObjectURL(file))
+  }
+
+  function clearAvatarPick() {
+    setAvatarFile(null)
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview)
+    setAvatarPreview(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  async function uploadAvatarIfNeeded(): Promise<string | null> {
+    if (!avatarFile) return emptyToNull(avatarUrl)
+
+    const supabase = createClient()
+    const ext = avatarFile.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const path = `${profile.id}/avatar.${ext}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('avatars')
+      .upload(path, avatarFile, {
+        upsert: true,
+        contentType: avatarFile.type,
+        cacheControl: '3600',
+      })
+
+    if (uploadError) {
+      throw new Error(uploadError.message)
+    }
+
+    const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+    // cache-bust supaya preview langsung ganti
+    return `${data.publicUrl}?t=${Date.now()}`
+  }
 
   function resetProjectForm() {
     setEditingId(null)
@@ -122,27 +176,40 @@ export default function MemberDashboard({
     setProfileMsg('')
     setProfileError('')
 
-    const supabase = createClient()
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        display_name: displayName.trim() || profile.username,
-        bio: emptyToNull(bio),
-        avatar_url: emptyToNull(avatarUrl),
-        github_url: emptyToNull(githubUrl),
-        website_url: emptyToNull(websiteUrl),
-        skills: parseList(skillsText),
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', profile.id)
+    try {
+      const nextAvatarUrl = await uploadAvatarIfNeeded()
 
-    setProfileLoading(false)
-    if (error) {
-      setProfileError(error.message)
-      return
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          display_name: displayName.trim() || profile.username,
+          bio: emptyToNull(bio),
+          avatar_url: nextAvatarUrl,
+          github_url: emptyToNull(githubUrl),
+          website_url: emptyToNull(websiteUrl),
+          skills: parseList(skillsText),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', profile.id)
+
+      if (error) {
+        setProfileError(error.message)
+        setProfileLoading(false)
+        return
+      }
+
+      if (nextAvatarUrl) setAvatarUrl(nextAvatarUrl)
+      clearAvatarPick()
+      setProfileMsg('Profil berhasil disimpan.')
+      router.refresh()
+    } catch (err) {
+      setProfileError(
+        err instanceof Error ? err.message : 'Gagal upload foto profil.'
+      )
+    } finally {
+      setProfileLoading(false)
     }
-    setProfileMsg('Profil berhasil disimpan.')
-    router.refresh()
   }
 
   async function handleSaveProject(e: React.FormEvent) {
@@ -238,10 +305,10 @@ export default function MemberDashboard({
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-start gap-4">
-          {avatarUrl ? (
+          {shownAvatar ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={avatarUrl}
+              src={shownAvatar}
               alt={displayName || profile.username}
               className="h-14 w-14 rounded-2xl object-cover ring-2 ring-sky-100 sm:h-16 sm:w-16"
             />
@@ -276,6 +343,55 @@ export default function MemberDashboard({
         </p>
         <Card className="mt-4">
           <form onSubmit={handleSaveProfile}>
+            {/* Foto profil */}
+            <div className="mb-5">
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                Foto profil
+              </label>
+              <div className="flex flex-wrap items-center gap-4">
+                {shownAvatar ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={shownAvatar}
+                    alt="Preview"
+                    className="h-16 w-16 rounded-2xl object-cover ring-2 ring-sky-100"
+                  />
+                ) : (
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-sm font-semibold text-slate-400">
+                    {(displayName || profile.username).charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
+                  >
+                    Pilih foto
+                  </button>
+                  {avatarFile ? (
+                    <button
+                      type="button"
+                      onClick={clearAvatarPick}
+                      className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-50"
+                    >
+                      Batal
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                className="hidden"
+                onChange={onPickAvatar}
+              />
+              <p className="mt-2 text-xs text-slate-400">
+                JPG, PNG, WebP, atau GIF. Maksimal 2MB.
+              </p>
+            </div>
+
             <Input
               label="Nama tampilan"
               value={displayName}
@@ -294,13 +410,6 @@ export default function MemberDashboard({
                 className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
               />
             </div>
-            <Input
-              label="Avatar URL"
-              type="url"
-              value={avatarUrl}
-              onChange={(e) => setAvatarUrl(e.target.value)}
-              placeholder="https://..."
-            />
             <Input
               label="GitHub URL"
               type="url"
@@ -338,7 +447,7 @@ export default function MemberDashboard({
         </Card>
       </section>
 
-      {/* Projects */}
+      {/* Projects — sama seperti sebelumnya */}
       <section>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
