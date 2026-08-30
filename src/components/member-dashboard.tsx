@@ -78,6 +78,7 @@ export default function MemberDashboard({
   const [thumbnailUrl, setThumbnailUrl] = useState('')
   const [thumbFile, setThumbFile] = useState<File | null>(null)
   const [thumbPreview, setThumbPreview] = useState<string | null>(null)
+  const [projectUrl, setProjectUrl] = useState('')
   const [githubProject, setGithubProject] = useState('')
   const [techText, setTechText] = useState('')
   const [status, setStatus] = useState<ProjectStatus>('published')
@@ -186,6 +187,7 @@ export default function MemberDashboard({
     setDescription('')
     setThumbnailUrl('')
     clearThumbPick()
+    setProjectUrl('')
     setGithubProject('')
     setTechText('')
     setStatus('published')
@@ -205,6 +207,7 @@ export default function MemberDashboard({
     setDescription(p.description ?? '')
     setThumbnailUrl(p.thumbnail_url ?? '')
     clearThumbPick()
+    setProjectUrl(p.project_url ?? '')
     setGithubProject(p.github_url ?? '')
     setTechText((p.tech_stack ?? []).join(', '))
     setStatus(p.status ?? 'published')
@@ -275,6 +278,7 @@ export default function MemberDashboard({
             title: title.trim(),
             description: emptyToNull(description),
             thumbnail_url: nextThumb,
+            project_url: emptyToNull(projectUrl),
             github_url: emptyToNull(githubProject),
             tech_stack: parseList(techText),
             status,
@@ -296,7 +300,6 @@ export default function MemberDashboard({
         )
         setProjectMsg('Project berhasil diupdate.')
       } else {
-        // Insert dulu supaya punya id, lalu upload thumbnail
         const { data: created, error: insertError } = await supabase
           .from('projects')
           .insert({
@@ -304,6 +307,7 @@ export default function MemberDashboard({
             title: title.trim(),
             description: emptyToNull(description),
             thumbnail_url: null,
+            project_url: emptyToNull(projectUrl),
             github_url: emptyToNull(githubProject),
             tech_stack: parseList(techText),
             status,
@@ -650,7 +654,14 @@ export default function MemberDashboard({
               </div>
 
               <Input
-                label="GitHub URL (opsional)"
+                label="Project URL (opsional)"
+                type="url"
+                value={projectUrl}
+                onChange={(e) => setProjectUrl(e.target.value)}
+                placeholder="https://..."
+              />
+              <Input
+                label="GitHub / Repo URL (opsional)"
                 type="url"
                 value={githubProject}
                 onChange={(e) => setGithubProject(e.target.value)}
@@ -724,6 +735,16 @@ export default function MemberDashboard({
                     </div>
                   ) : null}
                   <div className="mt-3 flex flex-wrap gap-3 text-sm">
+                    {p.project_url ? (
+                      <a
+                        href={p.project_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-slate-600 hover:underline"
+                      >
+                        Project
+                      </a>
+                    ) : null}
                     {p.github_url ? (
                       <a
                         href={p.github_url}
