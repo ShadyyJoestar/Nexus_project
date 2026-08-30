@@ -75,26 +75,31 @@ export default async function ClientPage() {
               members.map((m) => {
                 const skills = m.skills ?? []
                 return (
-                  <Card key={m.id}>
-                    <p className="font-semibold text-slate-900">
-                      {m.display_name}
-                    </p>
-                    <p className="text-sm text-sky-600">@{m.username}</p>
-                    {m.bio ? (
-                      <p className="mt-2 line-clamp-2 text-sm text-slate-500">
-                        {m.bio}
+                  <Link key={m.id} href={`/members/${m.username}`}>
+                    <Card className="h-full transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md">
+                      <p className="font-semibold text-slate-900">
+                        {m.display_name}
                       </p>
-                    ) : null}
-                    {skills.length > 0 ? (
-                      <div className="mt-3 flex flex-wrap gap-1.5">
-                        {skills.map((s) => (
-                          <Badge key={s} tone="slate">
-                            {s}
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : null}
-                  </Card>
+                      <p className="text-sm text-sky-600">@{m.username}</p>
+                      {m.bio ? (
+                        <p className="mt-2 line-clamp-2 text-sm text-slate-500">
+                          {m.bio}
+                        </p>
+                      ) : null}
+                      {skills.length > 0 ? (
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {skills.map((s) => (
+                            <Badge key={s} tone="slate">
+                              {s}
+                            </Badge>
+                          ))}
+                        </div>
+                      ) : null}
+                      <p className="mt-3 text-sm font-medium text-sky-600">
+                        Lihat profil →
+                      </p>
+                    </Card>
+                  </Link>
                 )
               })
             ) : (
