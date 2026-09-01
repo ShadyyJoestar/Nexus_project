@@ -25,7 +25,6 @@ export default async function AdminLayout({
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50/70 via-white to-teal-50/40 text-slate-800">
       <div className="flex min-h-screen flex-col md:flex-row">
-        {/* Sidebar */}
         <aside className="border-b border-sky-100 bg-white md:w-60 md:border-b-0 md:border-r">
           <div className="flex items-center justify-between p-4 md:block md:p-6">
             <div>
@@ -48,6 +47,22 @@ export default async function AdminLayout({
               className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-sky-700"
             >
               Users
+            </Link>
+
+            <p className="mt-3 hidden px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 md:block">
+              Site
+            </p>
+            <Link
+              href="/members"
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-sky-700"
+            >
+              Members
+            </Link>
+            <Link
+              href="/projects"
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-sky-700"
+            >
+              Projects
             </Link>
             <Link
               href="/"
