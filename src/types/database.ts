@@ -1,4 +1,4 @@
-export type UserRole = 'client' | 'member' | 'admin'
+export type UserRole = 'client' | 'member' | 'admin' | 'leader'
 
 export type ProjectStatus =
   | 'in_progress'

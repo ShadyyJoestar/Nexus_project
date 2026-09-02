@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props) {
   const { username } = await params
   return {
     title: `@${username} — Nexus`,
-    description: `Profil member CodeClass @${username}`,
+    description: `Profil CodeClass @${username}`,
   }
 }
 
@@ -43,7 +43,7 @@ export default async function MemberProfilePage({ params }: Props) {
       'id, username, display_name, avatar_url, bio, skills, github_url, website_url, role, created_at'
     )
     .eq('username', username)
-    .eq('role', 'member')
+    .in('role', ['member', 'leader'])
     .single()
 
   if (!profileData) notFound()
@@ -85,6 +85,7 @@ export default async function MemberProfilePage({ params }: Props) {
   >[]
 
   const skills = profile.skills ?? []
+  const isLeader = profile.role === 'leader'
 
   return (
     <PageShell>
@@ -111,7 +112,9 @@ export default async function MemberProfilePage({ params }: Props) {
                 <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
                   {profile.display_name}
                 </h1>
-                <Badge tone="teal">Member</Badge>
+                <Badge tone={isLeader ? 'sky' : 'teal'}>
+                  {isLeader ? 'Leader' : 'Member'}
+                </Badge>
               </div>
               <p className="mt-0.5 text-sky-600">@{profile.username}</p>
               {profile.bio ? (
@@ -241,7 +244,7 @@ export default async function MemberProfilePage({ params }: Props) {
             ) : (
               <Card className="sm:col-span-2">
                 <p className="text-sm text-slate-500">
-                  Member ini belum membagikan project.
+                  Belum membagikan project.
                 </p>
               </Card>
             )}

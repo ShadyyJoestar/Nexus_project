@@ -16,7 +16,18 @@ export function RoleSelect({
   const [role, setRole] = useState(currentRole)
   const [loading, setLoading] = useState(false)
 
+  // Leader tidak bisa diubah lewat admin UI
+  if (currentRole === 'leader') {
+    return (
+      <span className="inline-flex items-center rounded-lg border border-sky-100 bg-sky-50 px-2.5 py-1.5 text-sm font-medium text-sky-700">
+        leader
+      </span>
+    )
+  }
+
   async function handleChange(next: string) {
+    if (next === 'leader') return
+
     setLoading(true)
     setRole(next)
 
