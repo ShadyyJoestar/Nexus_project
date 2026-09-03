@@ -2,16 +2,58 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Badge } from '@/components/ui'
 import { RoleSelect } from './roleselect'
+import UsersToolbar from '@/components/users-toolbar'
+import Pagination from '@/components/pagination'
+import { Suspense } from 'react'
 
-export default async function AdminUsersPage() {
+const PAGE_SIZE = 25
+
+type Props = {
+  searchParams: Promise<{ q?: string; role?: string; page?: string }>
+}
+
+export default async function AdminUsersPage({ searchParams }: Props) {
+  const params = await searchParams
+  const q = (params.q ?? '').trim()
+  const role = (params.role ?? '').trim()
+  const page = Math.max(1, parseInt(params.page ?? '1', 10) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
   const supabase = await createClient()
 
-  const { data: users } = await supabase
+  let query = supabase
     .from('profiles')
     .select(
-      'id, username, display_name, role, github_url, website_url, skills, created_at'
+      'id, username, display_name, role, github_url, website_url, skills, created_at',
+      { count: 'exact' }
     )
+
+  if (role && ['client', 'member', 'admin', 'leader'].includes(role)) {
+    query = query.eq('role', role)
+  }
+
+  if (q) {
+    // Cari di username ATAU display_name
+    query = query.or(
+      `username.ilike.%${q}%,display_name.ilike.%${q}%`
+    )
+  }
+
+  const { data: users, count, error } = await query
     .order('created_at', { ascending: false })
+    .range(from, to)
+
+  if (error) {
+    return (
+      <div className="rounded-2xl border border-red-100 bg-red-50 p-6 text-sm text-red-700">
+        Gagal memuat users: {error.message}
+      </div>
+    )
+  }
+
+  const total = count ?? 0
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
 
   return (
     <div className="space-y-6">
@@ -20,11 +62,20 @@ export default async function AdminUsersPage() {
           Users & roles
         </h1>
         <p className="mt-1 max-w-2xl text-sm text-slate-500 sm:text-base">
-          Ubah role saja di sini. Create / delete akun tetap lewat database
-          Supabase. Client → Member agar bisa kelola project di dashboard
-          member.
+          Cari dan filter user. Create / delete akun tetap lewat Supabase.
+          Ditampilkan {PAGE_SIZE} per halaman.
         </p>
       </div>
+
+      <Suspense fallback={null}>
+        <UsersToolbar initialQ={q} initialRole={role} />
+      </Suspense>
+
+      <p className="text-sm text-slate-500">
+        {total} user ditemukan
+        {q ? ` untuk “${q}”` : ''}
+        {role ? ` · role ${role}` : ''}
+      </p>
 
       <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full min-w-[720px] text-left text-sm">
@@ -73,7 +124,7 @@ export default async function AdminUsersPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-col gap-1 text-xs">
-                        {user.role === 'member' ? (
+                        {user.role === 'member' || user.role === 'leader' ? (
                           <Link
                             href={`/members/${user.username}`}
                             target="_blank"
@@ -106,13 +157,21 @@ export default async function AdminUsersPage() {
                   colSpan={5}
                   className="px-4 py-10 text-center text-slate-400"
                 >
-                  Belum ada user
+                  Tidak ada user yang cocok.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        basePath="/admin/users"
+        q={q || undefined}
+        role={role || undefined}
+      />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import type { Profile, Project } from '@/types/database'
 import Navbar from '@/components/navbar'
@@ -7,8 +8,23 @@ import Container from '@/components/container'
 import { PageShell, Card, Badge } from '@/components/ui'
 import MemberDashboard from '@/components/member-dashboard'
 import { RoleSelect } from '@/app/admin/users/roleselect'
+import UsersToolbar from '@/components/users-toolbar'
+import Pagination from '@/components/pagination'
 
-export default async function LeaderPage() {
+const PAGE_SIZE = 25
+
+type Props = {
+  searchParams: Promise<{ q?: string; role?: string; page?: string }>
+}
+
+export default async function LeaderPage({ searchParams }: Props) {
+  const params = await searchParams
+  const q = (params.q ?? '').trim()
+  const roleFilter = (params.role ?? '').trim()
+  const page = Math.max(1, parseInt(params.page ?? '1', 10) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
   const supabase = await createClient()
   const {
     data: { user },
@@ -35,7 +51,7 @@ export default async function LeaderPage() {
     .eq('profile_id', user.id)
     .order('created_at', { ascending: false })
 
-  // Community stats
+  // Stats — count only (aman untuk ribuan row)
   const { count: totalUsers } = await supabase
     .from('profiles')
     .select('*', { count: 'exact', head: true })
@@ -59,13 +75,34 @@ export default async function LeaderPage() {
     .from('projects')
     .select('*', { count: 'exact', head: true })
 
-  const { data: allUsers } = await supabase
+  // Users — filtered + paginated
+  let usersQuery = supabase
     .from('profiles')
     .select(
-      'id, username, display_name, role, github_url, skills, created_at'
+      'id, username, display_name, role, github_url, skills, created_at',
+      { count: 'exact' }
     )
-    .order('created_at', { ascending: false })
 
+  if (
+    roleFilter &&
+    ['client', 'member', 'admin', 'leader'].includes(roleFilter)
+  ) {
+    usersQuery = usersQuery.eq('role', roleFilter)
+  }
+  if (q) {
+    usersQuery = usersQuery.or(
+      `username.ilike.%${q}%,display_name.ilike.%${q}%`
+    )
+  }
+
+  const { data: allUsers, count: usersCount } = await usersQuery
+    .order('created_at', { ascending: false })
+    .range(from, to)
+
+  const totalFiltered = usersCount ?? 0
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / PAGE_SIZE))
+
+  // Projects list — limit 20 saja
   const { data: allProjectsRaw } = await supabase
     .from('projects')
     .select(
@@ -110,7 +147,6 @@ export default async function LeaderPage() {
     <PageShell>
       <Navbar />
       <Container className="py-8 sm:py-12">
-        {/* Header leader */}
         <div className="mb-10 rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-teal-50/40 p-5 sm:p-6">
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="sky">Leader</Badge>
@@ -119,13 +155,11 @@ export default async function LeaderPage() {
             </h1>
           </div>
           <p className="mt-2 max-w-2xl text-sm text-slate-600">
-            Kelola profil & project kamu seperti member, plus pantau komunitas
-            dan atur role user (client / member / admin). Role leader hanya
-            bisa diubah lewat database.
+            Kelola profil & project kamu, plus pantau komunitas dan atur role
+            user. Role leader hanya lewat database.
           </p>
         </div>
 
-        {/* ===== BAGIAN 1: Profil + project sendiri ===== */}
         <section className="mb-16">
           <h2 className="mb-6 text-lg font-semibold text-slate-900">
             Profil & project saya
@@ -136,7 +170,6 @@ export default async function LeaderPage() {
           />
         </section>
 
-        {/* ===== BAGIAN 2: Manajemen komunitas ===== */}
         <section className="border-t border-slate-100 pt-12">
           <h2 className="text-lg font-semibold text-slate-900">
             Manajemen komunitas
@@ -145,7 +178,6 @@ export default async function LeaderPage() {
             Overview CodeClass — tanpa create/delete akun.
           </p>
 
-          {/* Stats */}
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             <Card>
               <p className="text-sm text-slate-500">Total users</p>
@@ -179,15 +211,21 @@ export default async function LeaderPage() {
             </Card>
           </div>
 
-          {/* Users & roles */}
-          <div className="mt-10">
-            <h3 className="text-base font-semibold text-slate-900">
-              Users & roles
-            </h3>
-            <p className="mt-1 text-sm text-slate-500">
-              Ubah client → member / admin. Leader tidak bisa diubah dari sini.
-            </p>
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="mt-10 space-y-4">
+            <div>
+              <h3 className="text-base font-semibold text-slate-900">
+                Users & roles
+              </h3>
+              <p className="mt-1 text-sm text-slate-500">
+                Cari / filter · {PAGE_SIZE} per halaman · {totalFiltered} hasil
+              </p>
+            </div>
+
+            <Suspense fallback={null}>
+              <UsersToolbar initialQ={q} initialRole={roleFilter} />
+            </Suspense>
+
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
               <table className="w-full min-w-[640px] text-left text-sm">
                 <thead className="bg-slate-50 text-slate-500">
                   <tr>
@@ -211,10 +249,7 @@ export default async function LeaderPage() {
                           <p className="text-xs text-sky-600">@{u.username}</p>
                         </td>
                         <td className="px-4 py-3">
-                          <RoleSelect
-                            userId={u.id}
-                            currentRole={u.role}
-                          />
+                          <RoleSelect userId={u.id} currentRole={u.role} />
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex flex-col gap-1 text-xs">
@@ -249,22 +284,29 @@ export default async function LeaderPage() {
                         colSpan={4}
                         className="px-4 py-8 text-center text-slate-400"
                       >
-                        Belum ada user
+                        Tidak ada user yang cocok.
                       </td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
+
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              basePath="/leader"
+              q={q || undefined}
+              role={roleFilter || undefined}
+            />
           </div>
 
-          {/* All projects (read-only) */}
           <div className="mt-10">
             <h3 className="text-base font-semibold text-slate-900">
-              Semua project
+              Project terbaru
             </h3>
             <p className="mt-1 text-sm text-slate-500">
-              Read-only. Edit/hapus hanya oleh owner di dashboard mereka.
+              20 project terakhir (read-only).
             </p>
             <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
               <table className="w-full min-w-[700px] text-left text-sm">
