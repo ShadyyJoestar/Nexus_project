@@ -2,14 +2,7 @@
 
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { useState, useTransition } from 'react'
-
-const ROLES = [
-  { value: '', label: 'Semua role' },
-  { value: 'client', label: 'Client' },
-  { value: 'member', label: 'Member' },
-  { value: 'admin', label: 'Admin' },
-  { value: 'leader', label: 'Leader' },
-]
+import { useLocale } from '@/components/locale-provider'
 
 export default function UsersToolbar({
   initialQ = '',
@@ -21,6 +14,7 @@ export default function UsersToolbar({
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const { t } = useLocale()
   const [q, setQ] = useState(initialQ)
   const [role, setRole] = useState(initialRole)
   const [pending, startTransition] = useTransition()
@@ -31,51 +25,45 @@ export default function UsersToolbar({
     else params.delete('q')
     if (nextRole) params.set('role', nextRole)
     else params.delete('role')
-    params.delete('page') // reset ke halaman 1
-    startTransition(() => {
-      router.push(`${pathname}?${params.toString()}`)
-    })
-  }
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    apply(q, role)
-  }
-
-  function onRoleChange(value: string) {
-    setRole(value)
-    apply(q, value)
+    params.delete('page')
+    startTransition(() => router.push(`${pathname}?${params.toString()}`))
   }
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={(e) => {
+        e.preventDefault()
+        apply(q, role)
+      }}
       className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
     >
       <input
         type="search"
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Cari username atau nama..."
-        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 sm:max-w-xs"
+        placeholder={t('searchUsers')}
+        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 sm:max-w-xs"
       />
       <select
         value={role}
-        onChange={(e) => onRoleChange(e.target.value)}
-        className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+        onChange={(e) => {
+          setRole(e.target.value)
+          apply(q, e.target.value)
+        }}
+        className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200"
       >
-        {ROLES.map((r) => (
-          <option key={r.value || 'all'} value={r.value}>
-            {r.label}
-          </option>
-        ))}
+        <option value="">{t('allRoles')}</option>
+        <option value="client">Client</option>
+        <option value="member">Member</option>
+        <option value="admin">Admin</option>
+        <option value="leader">Leader</option>
       </select>
       <button
         type="submit"
         disabled={pending}
-        className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-sky-600 hover:to-teal-500 disabled:opacity-60"
+        className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
       >
-        {pending ? 'Mencari...' : 'Cari'}
+        {pending ? t('loading') : t('members')}
       </button>
     </form>
   )

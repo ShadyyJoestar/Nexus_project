@@ -28,7 +28,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next)
     localStorage.setItem('nexus-locale', next)
-    document.documentElement.lang = next === 'id' ? 'id' : 'en'
+    document.documentElement.lang = next
   }, [])
 
   const t = useCallback(

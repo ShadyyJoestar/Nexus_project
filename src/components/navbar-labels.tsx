@@ -28,7 +28,6 @@ export default function NavbarLabels({
       >
         {t('projects')}
       </Link>
-
       {user ? (
         <>
           <Link

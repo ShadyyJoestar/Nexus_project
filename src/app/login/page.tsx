@@ -7,9 +7,11 @@ import { createClient } from '@/lib/supabase/client'
 import { getRedirectPath } from '@/lib/auth'
 import type { UserRole } from '@/types/database'
 import { AuthShell, Input, PrimaryButton } from '@/components/ui'
+import { useLocale } from '@/components/locale-provider'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { t } = useLocale()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -19,32 +21,27 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     const supabase = createClient()
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
-
     if (signInError) {
       setLoading(false)
       setError(signInError.message)
       return
     }
-
     const userId = data.user?.id
     if (!userId) {
       setLoading(false)
       setError('User tidak ditemukan')
       return
     }
-
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', userId)
       .single()
-
     setLoading(false)
     router.push(getRedirectPath(profile?.role as UserRole))
     router.refresh()
@@ -52,20 +49,23 @@ export default function LoginPage() {
 
   return (
     <AuthShell
-      title="Login"
-      subtitle="Masuk ke CodeClass"
+      title={t('loginTitle')}
+      subtitle={t('loginSubtitle')}
       footer={
         <>
-          Belum punya akun?{' '}
-          <Link href="/register" className="font-medium text-sky-600 hover:underline">
-            Daftar
+          {t('noAccount')}{' '}
+          <Link
+            href="/register"
+            className="font-medium text-sky-600 hover:underline dark:text-sky-400"
+          >
+            {t('register')}
           </Link>
         </>
       }
     >
       <form onSubmit={handleLogin}>
         <Input
-          label="Email"
+          label={t('email')}
           type="email"
           required
           value={email}
@@ -73,17 +73,17 @@ export default function LoginPage() {
           placeholder="nama@email.com"
         />
         <Input
-          label="Password"
+          label={t('password')}
           type="password"
           required
           minLength={6}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Minimal 6 karakter"
+          placeholder="••••••••"
         />
-        {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
+        {error ? <p className="mb-4 text-sm text-red-500">{error}</p> : null}
         <PrimaryButton type="submit" disabled={loading}>
-          {loading ? 'Loading...' : 'Login'}
+          {loading ? t('signingIn') : t('login')}
         </PrimaryButton>
       </form>
     </AuthShell>

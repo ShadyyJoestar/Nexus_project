@@ -20,7 +20,6 @@ export default async function Navbar() {
       .select('role, display_name, username')
       .eq('id', user.id)
       .single()
-
     role = profile?.role ?? null
     displayName = profile?.display_name || profile?.username || null
   }

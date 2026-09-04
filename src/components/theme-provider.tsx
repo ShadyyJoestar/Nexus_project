@@ -27,8 +27,7 @@ function getSystem(): 'light' | 'dark' {
 
 function applyTheme(theme: Theme) {
   const resolved = theme === 'system' ? getSystem() : theme
-  const root = document.documentElement
-  root.classList.toggle('dark', resolved === 'dark')
+  document.documentElement.classList.toggle('dark', resolved === 'dark')
   return resolved
 }
 

@@ -9,7 +9,6 @@ export default function PrefsToggles() {
 
   return (
     <div className="flex items-center gap-1">
-      {/* Theme */}
       <select
         aria-label={t('theme')}
         value={theme}
@@ -22,8 +21,6 @@ export default function PrefsToggles() {
         <option value="dark">{t('dark')}</option>
         <option value="system">{t('system')}</option>
       </select>
-
-      {/* Language */}
       <select
         aria-label={t('language')}
         value={locale}

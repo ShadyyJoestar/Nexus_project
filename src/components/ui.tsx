@@ -41,7 +41,6 @@ export function Badge({
     slate:
       'bg-slate-50 text-slate-600 ring-slate-100 dark:bg-slate-800 dark:text-slate-300 dark:ring-slate-700',
   }
-
   return (
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${tones[tone]}`}
@@ -108,7 +107,6 @@ export function AuthShell({
             Nexus
           </span>
         </Link>
-
         <div className="w-full max-w-md rounded-2xl border border-sky-100 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
           <h1 className="text-xl font-bold text-slate-900 dark:text-slate-100">
             {title}
@@ -120,7 +118,6 @@ export function AuthShell({
           ) : null}
           <div className="mt-6">{children}</div>
         </div>
-
         {footer ? (
           <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
             {footer}
