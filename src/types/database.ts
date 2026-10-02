@@ -41,3 +41,35 @@ export type ProfileUpdate = Partial<Omit<Profile, 'id' | 'created_at' | 'role'>>
 export type ProjectUpdate = Partial<
   Omit<Project, 'id' | 'profile_id' | 'created_at'>
 >
+
+// ===== Absensi =====
+export type AbsensiStatus = 'hadir' | 'izin' | 'sakit' | 'alpha'
+
+export type EkskulStudent = {
+  id: string
+  full_name: string
+  notes: string | null
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type AbsensiSession = {
+  id: string
+  session_date: string // YYYY-MM-DD
+  title: string | null
+  notes: string | null
+  created_by: string | null
+  created_at: string
+  updated_at: string
+}
+
+export type AbsensiRecord = {
+  id: string
+  session_id: string
+  student_id: string
+  status: AbsensiStatus
+  note: string | null
+  updated_by: string | null
+  updated_at: string
+}

@@ -148,11 +148,19 @@ export default async function LeaderPage({ searchParams }: Props) {
       <Navbar />
       <Container className="py-8 sm:py-12">
         <div className="mb-10 rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-teal-50/40 dark:border-slate-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 p-5 sm:p-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="sky">Leader</Badge>
-            <h1 className="text-xl font-bold text-slate-900 sm:text-2xl dark:text-slate-100">
-              Dashboard Leader
-            </h1>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge tone="sky">Leader</Badge>
+              <h1 className="text-xl font-bold text-slate-900 sm:text-2xl dark:text-slate-100">
+                Dashboard Leader
+              </h1>
+            </div>
+            <Link
+              href="/leader/absensi"
+              className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-sky-600 hover:to-teal-500"
+            >
+              Absensi →
+            </Link>
           </div>
           <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
             Kelola profil & project kamu, plus pantau komunitas dan atur role
