@@ -16,15 +16,15 @@ export default function AdminError({
 
   return (
     <div className="flex min-h-[50vh] flex-col items-start justify-center">
-      <p className="text-sm font-semibold text-sky-600">Error</p>
-      <h1 className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
+      <p className="text-sm font-semibold text-sky-600 dark:text-sky-400">Error</p>
+      <h1 className="mt-2 text-xl font-bold text-slate-900 dark:text-slate-100 sm:text-2xl">
         Gagal memuat halaman admin
       </h1>
-      <p className="mt-2 max-w-lg text-sm text-slate-500">
+      <p className="mt-2 max-w-lg text-sm text-slate-500 dark:text-slate-400">
         Terjadi kesalahan. Coba lagi atau kembali ke dashboard.
       </p>
       {error.digest ? (
-        <p className="mt-2 font-mono text-xs text-slate-400">
+        <p className="mt-2 font-mono text-xs text-slate-400 dark:text-slate-400">
           Kode: {error.digest}
         </p>
       ) : null}
@@ -38,7 +38,7 @@ export default function AdminError({
         </button>
         <Link
           href="/admin"
-          className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 transition hover:bg-slate-50"
         >
           Dashboard admin
         </Link>

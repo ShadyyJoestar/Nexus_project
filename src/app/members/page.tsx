@@ -29,7 +29,7 @@ function PersonCard({ m, featured }: { m: MemberCard; featured?: boolean }) {
       <Card
         className={`h-full transition hover:-translate-y-0.5 hover:shadow-md ${
           featured
-            ? 'border-sky-200 bg-gradient-to-b from-sky-50/80 to-white hover:border-sky-300'
+            ? 'border-sky-200 bg-gradient-to-b from-sky-50/80 to-white hover:border-sky-300 dark:border-sky-800 dark:from-slate-900 dark:to-slate-900 dark:hover:border-sky-700'
             : 'hover:border-sky-200'
         }`}
       >
@@ -48,7 +48,7 @@ function PersonCard({ m, featured }: { m: MemberCard; featured?: boolean }) {
           )}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <p className="truncate font-semibold text-slate-900">
+              <p className="truncate font-semibold text-slate-900 dark:text-slate-100">
                 {m.display_name}
               </p>
               {m.role === 'leader' ? (
@@ -57,12 +57,12 @@ function PersonCard({ m, featured }: { m: MemberCard; featured?: boolean }) {
                 <Badge tone="teal">Member</Badge>
               )}
             </div>
-            <p className="text-sm text-sky-600">@{m.username}</p>
+            <p className="text-sm text-sky-600 dark:text-sky-400">@{m.username}</p>
           </div>
         </div>
 
         {m.bio ? (
-          <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">
+          <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
             {m.bio}
           </p>
         ) : null}
@@ -80,7 +80,7 @@ function PersonCard({ m, featured }: { m: MemberCard; featured?: boolean }) {
           </div>
         ) : null}
 
-        <p className="mt-4 text-sm font-medium text-sky-600">Lihat profil →</p>
+        <p className="mt-4 text-sm font-medium text-sky-600 dark:text-sky-400">Lihat profil →</p>
       </Card>
     </Link>
   )
@@ -106,18 +106,18 @@ export default async function MembersPage() {
       <Navbar />
       <Container className="py-8 sm:py-12">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-sky-600">CodeClass</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          <p className="text-sm font-semibold text-sky-600 dark:text-sky-400">CodeClass</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
             Members
           </h1>
-          <p className="mt-2 text-sm text-slate-500 sm:text-base">
+          <p className="mt-2 text-sm text-slate-500 sm:text-base dark:text-slate-400">
             Leader dan member CodeClass — kenali mereka dan karya yang dibagikan.
           </p>
         </div>
 
         {leaders.length > 0 ? (
           <section className="mt-10">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-600">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400">
               Leaders
             </h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -129,7 +129,7 @@ export default async function MembersPage() {
         ) : null}
 
         <section className={leaders.length > 0 ? 'mt-12' : 'mt-8 sm:mt-10'}>
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400">
             Members
           </h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -137,7 +137,7 @@ export default async function MembersPage() {
               members.map((m) => <PersonCard key={m.id} m={m} />)
             ) : (
               <Card className="sm:col-span-2 lg:col-span-3">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   Belum ada member. Nanti muncul setelah role diubah menjadi
                   member.
                 </p>

@@ -1,7 +1,7 @@
 export function Skeleton({ className = '' }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded-lg bg-sky-100/80 ${className}`}
+      className={`animate-pulse rounded-lg bg-sky-100/80 dark:bg-slate-800 ${className}`}
       aria-hidden
     />
   )
@@ -9,7 +9,7 @@ export function Skeleton({ className = '' }: { className?: string }) {
 
 export function MemberCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-sky-100 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-sky-100 bg-white dark:border-slate-800 dark:bg-slate-900 p-5 shadow-sm">
       <div className="flex items-center gap-3">
         <Skeleton className="h-12 w-12 rounded-full" />
         <div className="flex-1 space-y-2">
@@ -29,7 +29,7 @@ export function MemberCardSkeleton() {
 
 export function ProjectCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-sky-100 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-sky-100 bg-white dark:border-slate-800 dark:bg-slate-900 p-5 shadow-sm">
       <Skeleton className="h-4 w-2/3" />
       <Skeleton className="mt-3 h-3 w-full" />
       <Skeleton className="mt-2 h-3 w-5/6" />
@@ -88,7 +88,7 @@ export function PageTitleSkeleton() {
 
 export function FormSkeleton() {
   return (
-    <div className="rounded-2xl border border-sky-100 bg-white p-5 shadow-sm sm:p-6">
+    <div className="rounded-2xl border border-sky-100 bg-white dark:border-slate-800 dark:bg-slate-900 p-5 shadow-sm sm:p-6">
       <div className="space-y-4">
         <div>
           <Skeleton className="mb-2 h-3 w-24" />

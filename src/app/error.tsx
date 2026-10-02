@@ -19,16 +19,16 @@ export default function Error({
       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-teal-400 text-lg font-bold text-white">
         N
       </div>
-      <p className="mt-6 text-sm font-semibold text-sky-600">Something went wrong</p>
-      <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+      <p className="mt-6 text-sm font-semibold text-sky-600 dark:text-sky-400">Something went wrong</p>
+      <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
         Halaman mengalami error
       </h1>
-      <p className="mt-3 max-w-md text-sm leading-6 text-slate-500 sm:text-base">
+      <p className="mt-3 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400 sm:text-base">
         Terjadi kesalahan saat memuat halaman ini. Coba muat ulang, atau kembali
         ke beranda.
       </p>
       {error.digest ? (
-        <p className="mt-2 font-mono text-xs text-slate-400">
+        <p className="mt-2 font-mono text-xs text-slate-400 dark:text-slate-400">
           Kode: {error.digest}
         </p>
       ) : null}
@@ -42,7 +42,7 @@ export default function Error({
         </button>
         <Link
           href="/"
-          className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 transition hover:bg-slate-50"
         >
           Ke beranda
         </Link>

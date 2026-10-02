@@ -147,21 +147,21 @@ export default async function LeaderPage({ searchParams }: Props) {
     <PageShell>
       <Navbar />
       <Container className="py-8 sm:py-12">
-        <div className="mb-10 rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-teal-50/40 p-5 sm:p-6">
+        <div className="mb-10 rounded-2xl border border-sky-100 bg-gradient-to-r from-sky-50 to-teal-50/40 dark:border-slate-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 p-5 sm:p-6">
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="sky">Leader</Badge>
-            <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
+            <h1 className="text-xl font-bold text-slate-900 sm:text-2xl dark:text-slate-100">
               Dashboard Leader
             </h1>
           </div>
-          <p className="mt-2 max-w-2xl text-sm text-slate-600">
+          <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
             Kelola profil & project kamu, plus pantau komunitas dan atur role
             user. Role leader hanya lewat database.
           </p>
         </div>
 
         <section className="mb-16">
-          <h2 className="mb-6 text-lg font-semibold text-slate-900">
+          <h2 className="mb-6 text-lg font-semibold text-slate-900 dark:text-slate-100">
             Profil & project saya
           </h2>
           <MemberDashboard
@@ -170,42 +170,42 @@ export default async function LeaderPage({ searchParams }: Props) {
           />
         </section>
 
-        <section className="border-t border-slate-100 pt-12">
-          <h2 className="text-lg font-semibold text-slate-900">
+        <section className="border-t border-slate-100 pt-12 dark:border-slate-800">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
             Manajemen komunitas
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Overview CodeClass — tanpa create/delete akun.
           </p>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             <Card>
-              <p className="text-sm text-slate-500">Total users</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">
+              <p className="text-sm text-slate-500 dark:text-slate-400">Total users</p>
+              <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">
                 {totalUsers ?? 0}
               </p>
             </Card>
             <Card>
-              <p className="text-sm text-slate-500">Client</p>
-              <p className="mt-2 text-3xl font-bold text-amber-600">
+              <p className="text-sm text-slate-500 dark:text-slate-400">Client</p>
+              <p className="mt-2 text-3xl font-bold text-amber-600 dark:text-amber-400">
                 {clientCount ?? 0}
               </p>
             </Card>
             <Card>
-              <p className="text-sm text-slate-500">Member</p>
-              <p className="mt-2 text-3xl font-bold text-teal-600">
+              <p className="text-sm text-slate-500 dark:text-slate-400">Member</p>
+              <p className="mt-2 text-3xl font-bold text-teal-600 dark:text-teal-400">
                 {memberCount ?? 0}
               </p>
             </Card>
             <Card>
-              <p className="text-sm text-slate-500">Admin</p>
-              <p className="mt-2 text-3xl font-bold text-sky-600">
+              <p className="text-sm text-slate-500 dark:text-slate-400">Admin</p>
+              <p className="mt-2 text-3xl font-bold text-sky-600 dark:text-sky-400">
                 {adminCount ?? 0}
               </p>
             </Card>
             <Card>
-              <p className="text-sm text-slate-500">Projects</p>
-              <p className="mt-2 text-3xl font-bold text-slate-900">
+              <p className="text-sm text-slate-500 dark:text-slate-400">Projects</p>
+              <p className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">
                 {projectCount ?? 0}
               </p>
             </Card>
@@ -213,10 +213,10 @@ export default async function LeaderPage({ searchParams }: Props) {
 
           <div className="mt-10 space-y-4">
             <div>
-              <h3 className="text-base font-semibold text-slate-900">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
                 Users & roles
               </h3>
-              <p className="mt-1 text-sm text-slate-500">
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 Cari / filter · {PAGE_SIZE} per halaman · {totalFiltered} hasil
               </p>
             </div>
@@ -225,9 +225,9 @@ export default async function LeaderPage({ searchParams }: Props) {
               <UsersToolbar initialQ={q} initialRole={roleFilter} />
             </Suspense>
 
-            <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
               <table className="w-full min-w-[640px] text-left text-sm">
-                <thead className="bg-slate-50 text-slate-500">
+                <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                   <tr>
                     <th className="px-4 py-3 font-medium">User</th>
                     <th className="px-4 py-3 font-medium">Role</th>
@@ -240,13 +240,13 @@ export default async function LeaderPage({ searchParams }: Props) {
                     allUsers.map((u) => (
                       <tr
                         key={u.id}
-                        className="border-t border-slate-100 text-slate-700"
+                        className="border-t border-slate-100 text-slate-700 dark:border-slate-800 dark:text-slate-200"
                       >
                         <td className="px-4 py-3">
-                          <p className="font-medium text-slate-900">
+                          <p className="font-medium text-slate-900 dark:text-slate-100">
                             {u.display_name}
                           </p>
-                          <p className="text-xs text-sky-600">@{u.username}</p>
+                          <p className="text-xs text-sky-600 dark:text-sky-400">@{u.username}</p>
                         </td>
                         <td className="px-4 py-3">
                           <RoleSelect userId={u.id} currentRole={u.role} />
@@ -256,7 +256,7 @@ export default async function LeaderPage({ searchParams }: Props) {
                             {u.role === 'member' || u.role === 'leader' ? (
                               <Link
                                 href={`/members/${u.username}`}
-                                className="font-medium text-sky-600 hover:underline"
+                                className="font-medium text-sky-600 hover:underline dark:text-sky-400"
                               >
                                 Profil →
                               </Link>
@@ -266,14 +266,14 @@ export default async function LeaderPage({ searchParams }: Props) {
                                 href={u.github_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-slate-500 hover:underline"
+                                className="text-slate-500 hover:underline dark:text-slate-400"
                               >
                                 GitHub ↗
                               </a>
                             ) : null}
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-slate-400">
+                        <td className="px-4 py-3 text-slate-400 dark:text-slate-400">
                           {new Date(u.created_at).toLocaleDateString('id-ID')}
                         </td>
                       </tr>
@@ -282,7 +282,7 @@ export default async function LeaderPage({ searchParams }: Props) {
                     <tr>
                       <td
                         colSpan={4}
-                        className="px-4 py-8 text-center text-slate-400"
+                        className="px-4 py-8 text-center text-slate-400 dark:text-slate-400"
                       >
                         Tidak ada user yang cocok.
                       </td>
@@ -302,15 +302,15 @@ export default async function LeaderPage({ searchParams }: Props) {
           </div>
 
           <div className="mt-10">
-            <h3 className="text-base font-semibold text-slate-900">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
               Project terbaru
             </h3>
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               20 project terakhir (read-only).
             </p>
-            <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div className="mt-4 overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
               <table className="w-full min-w-[700px] text-left text-sm">
-                <thead className="bg-slate-50 text-slate-500">
+                <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                   <tr>
                     <th className="px-4 py-3 font-medium">Project</th>
                     <th className="px-4 py-3 font-medium">Author</th>
@@ -326,16 +326,16 @@ export default async function LeaderPage({ searchParams }: Props) {
                       return (
                         <tr
                           key={p.id}
-                          className="border-t border-slate-100 text-slate-700"
+                          className="border-t border-slate-100 text-slate-700 dark:border-slate-800 dark:text-slate-200"
                         >
-                          <td className="px-4 py-3 font-medium text-slate-900">
+                          <td className="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
                             {p.title}
                           </td>
                           <td className="px-4 py-3">
                             {p.author ? (
                               <Link
                                 href={`/members/${p.author.username}`}
-                                className="text-sky-600 hover:underline"
+                                className="text-sky-600 hover:underline dark:text-sky-400"
                               >
                                 @{p.author.username}
                               </Link>
@@ -368,7 +368,7 @@ export default async function LeaderPage({ searchParams }: Props) {
                                   href={p.github_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-sky-600 hover:underline"
+                                  className="text-sky-600 hover:underline dark:text-sky-400"
                                 >
                                   GitHub ↗
                                 </a>
@@ -378,7 +378,7 @@ export default async function LeaderPage({ searchParams }: Props) {
                                   href={p.project_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-slate-500 hover:underline"
+                                  className="text-slate-500 hover:underline dark:text-slate-400"
                                 >
                                   Project ↗
                                 </a>
@@ -393,7 +393,7 @@ export default async function LeaderPage({ searchParams }: Props) {
                     <tr>
                       <td
                         colSpan={5}
-                        className="px-4 py-8 text-center text-slate-400"
+                        className="px-4 py-8 text-center text-slate-400 dark:text-slate-400"
                       >
                         Belum ada project
                       </td>

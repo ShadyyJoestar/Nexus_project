@@ -26,31 +26,31 @@ export default function Pagination({
 
   return (
     <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm">
-      <p className="text-slate-500">
+      <p className="text-slate-500 dark:text-slate-400">
         Halaman {page} dari {totalPages}
       </p>
       <div className="flex gap-2">
         {page > 1 ? (
           <Link
             href={href(page - 1)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 px-3 py-1.5 font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50"
           >
             ← Prev
           </Link>
         ) : (
-          <span className="rounded-lg border border-slate-100 px-3 py-1.5 text-slate-300">
+          <span className="rounded-lg border border-slate-100 px-3 py-1.5 text-slate-300 dark:border-slate-800 dark:text-slate-500">
             ← Prev
           </span>
         )}
         {page < totalPages ? (
           <Link
             href={href(page + 1)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50"
+            className="rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 px-3 py-1.5 font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50"
           >
             Next →
           </Link>
         ) : (
-          <span className="rounded-lg border border-slate-100 px-3 py-1.5 text-slate-300">
+          <span className="rounded-lg border border-slate-100 px-3 py-1.5 text-slate-300 dark:border-slate-800 dark:text-slate-500">
             Next →
           </span>
         )}

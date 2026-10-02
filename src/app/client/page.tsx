@@ -58,10 +58,10 @@ export default async function ClientPage() {
       <Container className="py-8 sm:py-12">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+            <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl dark:text-slate-100">
               Community
             </h1>
-            <p className="mt-1 text-sm text-slate-500 sm:text-base">
+            <p className="mt-1 text-sm text-slate-500 sm:text-base dark:text-slate-400">
               Lihat member CodeClass dan project mereka.
             </p>
           </div>
@@ -69,7 +69,7 @@ export default async function ClientPage() {
         </div>
 
         <section className="mt-10">
-          <h2 className="text-lg font-semibold text-slate-900">Members</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Members</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {members.length > 0 ? (
               members.map((m) => {
@@ -77,12 +77,12 @@ export default async function ClientPage() {
                 return (
                   <Link key={m.id} href={`/members/${m.username}`}>
                     <Card className="h-full transition hover:-translate-y-0.5 hover:border-sky-200 hover:shadow-md">
-                      <p className="font-semibold text-slate-900">
+                      <p className="font-semibold text-slate-900 dark:text-slate-100">
                         {m.display_name}
                       </p>
-                      <p className="text-sm text-sky-600">@{m.username}</p>
+                      <p className="text-sm text-sky-600 dark:text-sky-400">@{m.username}</p>
                       {m.bio ? (
-                        <p className="mt-2 line-clamp-2 text-sm text-slate-500">
+                        <p className="mt-2 line-clamp-2 text-sm text-slate-500 dark:text-slate-400">
                           {m.bio}
                         </p>
                       ) : null}
@@ -95,7 +95,7 @@ export default async function ClientPage() {
                           ))}
                         </div>
                       ) : null}
-                      <p className="mt-3 text-sm font-medium text-sky-600">
+                      <p className="mt-3 text-sm font-medium text-sky-600 dark:text-sky-400">
                         Lihat profil →
                       </p>
                     </Card>
@@ -103,22 +103,22 @@ export default async function ClientPage() {
                 )
               })
             ) : (
-              <p className="text-sm text-slate-500">Belum ada member.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Belum ada member.</p>
             )}
           </div>
         </section>
 
         <section className="mt-12">
-          <h2 className="text-lg font-semibold text-slate-900">Projects</h2>
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Projects</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {projects.length > 0 ? (
               projects.map((p) => {
                 const tech = p.tech_stack ?? []
                 return (
                   <Card key={p.id}>
-                    <p className="font-semibold text-slate-900">{p.title}</p>
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">{p.title}</p>
                     {p.description ? (
-                      <p className="mt-2 line-clamp-2 text-sm text-slate-500">
+                      <p className="mt-2 line-clamp-2 text-sm text-slate-500 dark:text-slate-400">
                         {p.description}
                       </p>
                     ) : null}
@@ -137,7 +137,7 @@ export default async function ClientPage() {
                           href={p.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-medium text-sky-600 hover:underline"
+                          className="font-medium text-sky-600 hover:underline dark:text-sky-400"
                         >
                           GitHub
                         </a>
@@ -147,7 +147,7 @@ export default async function ClientPage() {
                           href={p.live_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-medium text-teal-600 hover:underline"
+                          className="font-medium text-teal-600 hover:underline dark:text-teal-400"
                         >
                           Live
                         </a>
@@ -157,7 +157,7 @@ export default async function ClientPage() {
                 )
               })
             ) : (
-              <p className="text-sm text-slate-500">Belum ada project.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Belum ada project.</p>
             )}
           </div>
         </section>

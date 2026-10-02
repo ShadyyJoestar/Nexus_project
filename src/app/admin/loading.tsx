@@ -16,7 +16,7 @@ export default function Loading() {
       </div>
       <div className="mt-10">
         <Skeleton className="h-6 w-32" />
-        <div className="mt-4 overflow-hidden rounded-2xl border border-sky-100 bg-white p-4">
+        <div className="mt-4 overflow-hidden rounded-2xl border border-sky-100 bg-white dark:border-slate-800 dark:bg-slate-900 p-4">
           <div className="space-y-3">
             {[1, 2, 3, 4, 5].map((i) => (
               <Skeleton key={i} className="h-10 w-full" />

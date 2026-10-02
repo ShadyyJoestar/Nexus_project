@@ -67,11 +67,11 @@ export default async function ProjectsPage() {
       <Navbar />
       <Container className="py-8 sm:py-12">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold text-sky-600">CodeClass</p>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          <p className="text-sm font-semibold text-sky-600 dark:text-sky-400">CodeClass</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
             Projects
           </h1>
-          <p className="mt-2 text-sm text-slate-500 sm:text-base">
+          <p className="mt-2 text-sm text-slate-500 sm:text-base dark:text-slate-400">
             Semua project yang dibagikan member CodeClass.
           </p>
         </div>
@@ -85,11 +85,11 @@ export default async function ProjectsPage() {
               return (
                 <Card key={p.id} className="flex flex-col">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="font-semibold text-slate-900">{p.title}</p>
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">{p.title}</p>
                   </div>
 
                   {p.description ? (
-                    <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-slate-500">
+                    <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
                       {p.description}
                     </p>
                   ) : (
@@ -107,15 +107,15 @@ export default async function ProjectsPage() {
                   ) : null}
 
                   {author ? (
-                    <p className="mt-4 text-sm text-slate-500">
+                    <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
                       oleh{' '}
                       <Link
                         href={`/members/${author.username}`}
-                        className="font-medium text-sky-600 hover:underline"
+                        className="font-medium text-sky-600 hover:underline dark:text-sky-400"
                       >
                         {author.display_name}
                       </Link>
-                      <span className="text-slate-400">
+                      <span className="text-slate-400 dark:text-slate-400">
                         {' '}
                         · @{author.username}
                       </span>
@@ -128,7 +128,7 @@ export default async function ProjectsPage() {
                         href={p.github_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
+                        className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:border-slate-700 dark:text-slate-300"
                       >
                         GitHub
                       </a>
@@ -149,7 +149,7 @@ export default async function ProjectsPage() {
             })
           ) : (
             <Card className="sm:col-span-2">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Belum ada project yang dibagikan.
               </p>
             </Card>

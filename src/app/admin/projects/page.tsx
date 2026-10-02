@@ -51,18 +51,18 @@ export default async function AdminProjectsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
           All projects
         </h1>
-        <p className="mt-1 text-sm text-slate-500 sm:text-base">
+        <p className="mt-1 text-sm text-slate-500 sm:text-base dark:text-slate-400">
           Overview project member. Hapus/edit project hanya lewat dashboard
           owner masing-masing.
         </p>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <table className="w-full min-w-[800px] text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             <tr>
               <th className="px-4 py-3 font-medium">Project</th>
               <th className="px-4 py-3 font-medium">Author</th>
@@ -79,12 +79,12 @@ export default async function AdminProjectsPage() {
                 return (
                   <tr
                     key={p.id}
-                    className="border-t border-slate-100 text-slate-700"
+                    className="border-t border-slate-100 text-slate-700 dark:border-slate-800 dark:text-slate-200"
                   >
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-900">{p.title}</p>
+                      <p className="font-medium text-slate-900 dark:text-slate-100">{p.title}</p>
                       {p.description ? (
-                        <p className="mt-0.5 line-clamp-1 max-w-xs text-xs text-slate-400">
+                        <p className="mt-0.5 line-clamp-1 max-w-xs text-xs text-slate-400 dark:text-slate-400">
                           {p.description}
                         </p>
                       ) : null}
@@ -94,7 +94,7 @@ export default async function AdminProjectsPage() {
                         <Link
                           href={`/members/${p.author.username}`}
                           target="_blank"
-                          className="font-medium text-sky-600 hover:underline"
+                          className="font-medium text-sky-600 hover:underline dark:text-sky-400"
                         >
                           @{p.author.username}
                         </Link>
@@ -115,7 +115,7 @@ export default async function AdminProjectsPage() {
                           ) : null}
                         </div>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-slate-400 dark:text-slate-400">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -130,7 +130,7 @@ export default async function AdminProjectsPage() {
                             href={p.github_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sky-600 hover:underline"
+                            className="text-sky-600 hover:underline dark:text-sky-400"
                           >
                             GitHub ↗
                           </a>
@@ -140,17 +140,17 @@ export default async function AdminProjectsPage() {
                             href={p.project_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-slate-500 hover:underline"
+                            className="text-slate-500 hover:underline dark:text-slate-400"
                           >
                             Project ↗
                           </a>
                         ) : null}
                         {!p.github_url && !p.project_url ? (
-                          <span className="text-slate-400">—</span>
+                          <span className="text-slate-400 dark:text-slate-400">—</span>
                         ) : null}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-400">
+                    <td className="px-4 py-3 text-slate-400 dark:text-slate-400">
                       {new Date(p.created_at).toLocaleDateString('id-ID')}
                     </td>
                   </tr>
@@ -160,7 +160,7 @@ export default async function AdminProjectsPage() {
               <tr>
                 <td
                   colSpan={6}
-                  className="px-4 py-10 text-center text-slate-400"
+                  className="px-4 py-10 text-center text-slate-400 dark:text-slate-400"
                 >
                   Belum ada project
                 </td>

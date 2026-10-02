@@ -109,16 +109,16 @@ export default async function MemberProfilePage({ params }: Props) {
             )}
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
                   {profile.display_name}
                 </h1>
                 <Badge tone={isLeader ? 'sky' : 'teal'}>
                   {isLeader ? 'Leader' : 'Member'}
                 </Badge>
               </div>
-              <p className="mt-0.5 text-sky-600">@{profile.username}</p>
+              <p className="mt-0.5 text-sky-600 dark:text-sky-400">@{profile.username}</p>
               {profile.bio ? (
-                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 sm:text-base">
+                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 sm:text-base dark:text-slate-300">
                   {profile.bio}
                 </p>
               ) : null}
@@ -131,7 +131,7 @@ export default async function MemberProfilePage({ params }: Props) {
                 href={profile.github_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
               >
                 GitHub
               </a>
@@ -141,14 +141,14 @@ export default async function MemberProfilePage({ params }: Props) {
                 href={profile.website_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700"
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
               >
                 Website
               </a>
             ) : null}
             <Link
               href="/members"
-              className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-500 transition hover:bg-slate-50"
+              className="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-500 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
             >
               ← Semua member
             </Link>
@@ -157,7 +157,7 @@ export default async function MemberProfilePage({ params }: Props) {
 
         {skills.length > 0 ? (
           <section className="mt-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400">
               Skills
             </h2>
             <div className="mt-3 flex flex-wrap gap-2">
@@ -172,8 +172,8 @@ export default async function MemberProfilePage({ params }: Props) {
 
         <section className="mt-10">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Projects</h2>
-            <p className="mt-0.5 text-sm text-slate-500">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Projects</h2>
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
               {projects.length > 0
                 ? `${projects.length} project dibagikan`
                 : 'Belum ada project'}
@@ -195,13 +195,13 @@ export default async function MemberProfilePage({ params }: Props) {
                       />
                     ) : null}
                     <div className="flex flex-wrap items-start justify-between gap-2">
-                      <p className="font-semibold text-slate-900">{p.title}</p>
+                      <p className="font-semibold text-slate-900 dark:text-slate-100">{p.title}</p>
                       <Badge tone={statusTone(p.status ?? 'published')}>
                         {(p.status ?? 'published').replace('_', ' ')}
                       </Badge>
                     </div>
                     {p.description ? (
-                      <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-slate-500">
+                      <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
                         {p.description}
                       </p>
                     ) : (
@@ -222,7 +222,7 @@ export default async function MemberProfilePage({ params }: Props) {
                           href={p.project_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
                         >
                           Project
                         </a>
@@ -232,7 +232,7 @@ export default async function MemberProfilePage({ params }: Props) {
                           href={p.github_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
+                          className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:border-slate-700 dark:text-slate-300"
                         >
                           GitHub
                         </a>
@@ -243,7 +243,7 @@ export default async function MemberProfilePage({ params }: Props) {
               })
             ) : (
               <Card className="sm:col-span-2">
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                   Belum membagikan project.
                 </p>
               </Card>

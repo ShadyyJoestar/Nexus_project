@@ -8,11 +8,11 @@ export default function NotFound() {
     <PageShell>
       <Navbar />
       <Container className="flex min-h-[70vh] flex-col items-center justify-center py-16 text-center">
-        <p className="text-sm font-semibold text-sky-600">404</p>
-        <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        <p className="text-sm font-semibold text-sky-600 dark:text-sky-400">404</p>
+        <h1 className="mt-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-3xl">
           Halaman tidak ditemukan
         </h1>
-        <p className="mt-3 max-w-md text-sm leading-6 text-slate-500 sm:text-base">
+        <p className="mt-3 max-w-md text-sm leading-6 text-slate-500 dark:text-slate-400 sm:text-base">
           URL yang kamu buka tidak ada atau sudah dipindahkan.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -24,7 +24,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/members"
-            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            className="rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900 px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 transition hover:bg-slate-50"
           >
             Lihat members
           </Link>

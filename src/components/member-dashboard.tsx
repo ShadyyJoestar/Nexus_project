@@ -404,15 +404,15 @@ export default function MemberDashboard({
           )}
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
+              <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl dark:text-slate-100">
                 {displayName || profile.username}
               </h1>
               <Badge tone="teal">Member</Badge>
             </div>
-            <p className="mt-0.5 text-sky-600">@{profile.username}</p>
+            <p className="mt-0.5 text-sky-600 dark:text-sky-400">@{profile.username}</p>
             <Link
               href={`/members/${profile.username}`}
-              className="mt-2 inline-block text-sm font-medium text-slate-500 transition hover:text-sky-600"
+              className="mt-2 inline-block text-sm font-medium text-slate-500 transition hover:text-sky-600 dark:text-slate-400"
             >
               Lihat profil publik →
             </Link>
@@ -422,14 +422,14 @@ export default function MemberDashboard({
 
       {/* Edit profile */}
       <section>
-        <h2 className="text-lg font-semibold text-slate-900">Edit profil</h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Edit profil</h2>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Informasi ini tampil di halaman publik kamu.
         </p>
         <Card className="mt-4">
           <form onSubmit={handleSaveProfile}>
             <div className="mb-5">
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200">
                 Foto profil
               </label>
               <div className="flex flex-wrap items-center gap-4">
@@ -441,7 +441,7 @@ export default function MemberDashboard({
                     className="h-16 w-16 rounded-2xl object-cover ring-2 ring-sky-100"
                   />
                 ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-sm font-semibold text-slate-400">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100 text-sm font-semibold text-slate-400 dark:bg-slate-800 dark:text-slate-400">
                     {(displayName || profile.username).charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -449,7 +449,7 @@ export default function MemberDashboard({
                   <button
                     type="button"
                     onClick={() => avatarInputRef.current?.click()}
-                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
+                    className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                   >
                     Pilih foto
                   </button>
@@ -457,7 +457,7 @@ export default function MemberDashboard({
                     <button
                       type="button"
                       onClick={clearAvatarPick}
-                      className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-50"
+                      className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400"
                     >
                       Batal
                     </button>
@@ -471,7 +471,7 @@ export default function MemberDashboard({
                 className="hidden"
                 onChange={onPickAvatar}
               />
-              <p className="mt-2 text-xs text-slate-400">
+              <p className="mt-2 text-xs text-slate-400 dark:text-slate-400">
                 JPG, PNG, WebP, atau GIF. Maksimal 2MB.
               </p>
             </div>
@@ -483,7 +483,7 @@ export default function MemberDashboard({
               placeholder="Revan"
             />
             <div className="mb-4">
-              <label className="mb-1.5 block text-sm font-medium text-slate-700">
+              <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200">
                 Bio
               </label>
               <textarea
@@ -491,7 +491,7 @@ export default function MemberDashboard({
                 onChange={(e) => setBio(e.target.value)}
                 rows={3}
                 placeholder="Student & developer..."
-                className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               />
             </div>
             <Input
@@ -535,10 +535,10 @@ export default function MemberDashboard({
       <section>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
               Project kamu
             </h2>
-            <p className="mt-0.5 text-sm text-slate-500">
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
               {projects.length} project
             </p>
           </div>
@@ -553,7 +553,7 @@ export default function MemberDashboard({
 
         {showProjectForm ? (
           <Card className="mt-4">
-            <h3 className="mb-4 text-base font-semibold text-slate-900">
+            <h3 className="mb-4 text-base font-semibold text-slate-900 dark:text-slate-100">
               {editingId ? 'Edit project' : 'Project baru'}
             </h3>
             <form onSubmit={handleSaveProject}>
@@ -565,7 +565,7 @@ export default function MemberDashboard({
                 required
               />
               <div className="mb-4">
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200">
                   Deskripsi
                 </label>
                 <textarea
@@ -573,7 +573,7 @@ export default function MemberDashboard({
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
                   placeholder="Platform profile dan project showcase untuk CodeClass."
-                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 />
               </div>
               <Input
@@ -583,7 +583,7 @@ export default function MemberDashboard({
                 placeholder="Next.js, TypeScript, Supabase, Tailwind"
               />
               <div className="mb-4">
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200">
                   Status
                 </label>
                 <select
@@ -591,7 +591,7 @@ export default function MemberDashboard({
                   onChange={(e) =>
                     setStatus(e.target.value as ProjectStatus)
                   }
-                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 >
                   {STATUS_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -603,7 +603,7 @@ export default function MemberDashboard({
 
               {/* Thumbnail file */}
               <div className="mb-4">
-                <label className="mb-1.5 block text-sm font-medium text-slate-700">
+                <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-200">
                   Thumbnail (opsional)
                 </label>
                 <div className="flex flex-wrap items-center gap-4">
@@ -615,7 +615,7 @@ export default function MemberDashboard({
                       className="h-20 w-32 rounded-xl object-cover ring-1 ring-sky-100"
                     />
                   ) : (
-                    <div className="flex h-20 w-32 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400">
+                    <div className="flex h-20 w-32 items-center justify-center rounded-xl bg-slate-100 text-xs text-slate-400 dark:bg-slate-800 dark:text-slate-400">
                       Tidak ada gambar
                     </div>
                   )}
@@ -623,7 +623,7 @@ export default function MemberDashboard({
                     <button
                       type="button"
                       onClick={() => thumbInputRef.current?.click()}
-                      className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700"
+                      className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
                     >
                       Pilih gambar
                     </button>
@@ -634,7 +634,7 @@ export default function MemberDashboard({
                           clearThumbPick()
                           setThumbnailUrl('')
                         }}
-                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-50"
+                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-500 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400"
                       >
                         Hapus
                       </button>
@@ -648,7 +648,7 @@ export default function MemberDashboard({
                   className="hidden"
                   onChange={onPickThumb}
                 />
-                <p className="mt-2 text-xs text-slate-400">
+                <p className="mt-2 text-xs text-slate-400 dark:text-slate-400">
                   Screenshot / cover project. JPG, PNG, WebP, GIF. Maks 3MB.
                 </p>
               </div>
@@ -689,7 +689,7 @@ export default function MemberDashboard({
                 <button
                   type="button"
                   onClick={resetProjectForm}
-                  className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                  className="rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
                 >
                   Batal
                 </button>
@@ -713,13 +713,13 @@ export default function MemberDashboard({
                     />
                   ) : null}
                   <div className="flex flex-wrap items-start justify-between gap-2">
-                    <p className="font-semibold text-slate-900">{p.title}</p>
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">{p.title}</p>
                     <Badge tone={statusTone(p.status ?? 'published')}>
                       {(p.status ?? 'published').replace('_', ' ')}
                     </Badge>
                   </div>
                   {p.description ? (
-                    <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-slate-500">
+                    <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-slate-500 dark:text-slate-400">
                       {p.description}
                     </p>
                   ) : (
@@ -740,7 +740,7 @@ export default function MemberDashboard({
                         href={p.project_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-slate-600 hover:underline"
+                        className="font-medium text-slate-600 hover:underline dark:text-slate-300"
                       >
                         Project
                       </a>
@@ -750,7 +750,7 @@ export default function MemberDashboard({
                         href={p.github_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="font-medium text-sky-600 hover:underline"
+                        className="font-medium text-sky-600 hover:underline dark:text-sky-400"
                       >
                         GitHub
                       </a>
@@ -759,14 +759,14 @@ export default function MemberDashboard({
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Link
                       href={`/members/${profile.username}`}
-                      className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
+                      className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300"
                     >
                       View
                     </Link>
                     <button
                       type="button"
                       onClick={() => openEditProject(p)}
-                      className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-sky-700"
+                      className="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-sky-700 dark:border-slate-700 dark:text-slate-300"
                     >
                       Edit
                     </button>
@@ -783,7 +783,7 @@ export default function MemberDashboard({
             })
           ) : (
             <Card className="sm:col-span-2">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 Belum ada project. Klik &quot;+ Tambah project&quot; untuk
                 mulai membagikan karya kamu.
               </p>

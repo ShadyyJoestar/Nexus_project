@@ -51,7 +51,7 @@ export default async function AdminLayout({
           </div>
 
           <nav className="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:overflow-visible lg:px-4 lg:pb-4">
-            <p className="mb-1 hidden px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 lg:block">
+            <p className="mb-1 hidden px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 lg:block">
               Manage
             </p>
             <Link
@@ -73,7 +73,7 @@ export default async function AdminLayout({
               All projects
             </Link>
 
-            <p className="mb-1 mt-4 hidden px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 lg:block">
+            <p className="mb-1 mt-4 hidden px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 lg:block">
               Public site
             </p>
             <Link
@@ -103,11 +103,11 @@ export default async function AdminLayout({
           </nav>
 
           <div className="mt-auto hidden border-t border-slate-100 p-4 dark:border-slate-800 lg:block">
-            <p className="text-xs text-slate-400">Login sebagai</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500">Login sebagai</p>
             <p className="mt-0.5 truncate text-sm font-medium text-slate-800 dark:text-slate-100">
               {profile.display_name || profile.username}
             </p>
-            <p className="truncate text-xs text-slate-400">
+            <p className="truncate text-xs text-slate-400 dark:text-slate-500">
               @{profile.username}
             </p>
 

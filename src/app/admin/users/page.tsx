@@ -58,10 +58,10 @@ export default async function AdminUsersPage({ searchParams }: Props) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
           Users & roles
         </h1>
-        <p className="mt-1 max-w-2xl text-sm text-slate-500 sm:text-base">
+        <p className="mt-1 max-w-2xl text-sm text-slate-500 sm:text-base dark:text-slate-400">
           Cari dan filter user. Create / delete akun tetap lewat Supabase.
           Ditampilkan {PAGE_SIZE} per halaman.
         </p>
@@ -71,15 +71,15 @@ export default async function AdminUsersPage({ searchParams }: Props) {
         <UsersToolbar initialQ={q} initialRole={role} />
       </Suspense>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-slate-500 dark:text-slate-400">
         {total} user ditemukan
         {q ? ` untuk “${q}”` : ''}
         {role ? ` · role ${role}` : ''}
       </p>
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="bg-slate-50 text-slate-500">
+          <thead className="bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
             <tr>
               <th className="px-4 py-3 font-medium">User</th>
               <th className="px-4 py-3 font-medium">Role</th>
@@ -95,13 +95,13 @@ export default async function AdminUsersPage({ searchParams }: Props) {
                 return (
                   <tr
                     key={user.id}
-                    className="border-t border-slate-100 text-slate-700"
+                    className="border-t border-slate-100 text-slate-700 dark:border-slate-800 dark:text-slate-200"
                   >
                     <td className="px-4 py-3">
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-slate-900 dark:text-slate-100">
                         {user.display_name}
                       </p>
-                      <p className="text-xs text-sky-600">@{user.username}</p>
+                      <p className="text-xs text-sky-600 dark:text-sky-400">@{user.username}</p>
                     </td>
                     <td className="px-4 py-3">
                       <RoleSelect userId={user.id} currentRole={user.role} />
@@ -119,7 +119,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
                           ) : null}
                         </div>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-slate-400 dark:text-slate-400">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
@@ -128,7 +128,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
                           <Link
                             href={`/members/${user.username}`}
                             target="_blank"
-                            className="font-medium text-sky-600 hover:underline"
+                            className="font-medium text-sky-600 hover:underline dark:text-sky-400"
                           >
                             Profil ↗
                           </Link>
@@ -138,14 +138,14 @@ export default async function AdminUsersPage({ searchParams }: Props) {
                             href={user.github_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-slate-500 hover:underline"
+                            className="text-slate-500 hover:underline dark:text-slate-400"
                           >
                             GitHub ↗
                           </a>
                         ) : null}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-slate-400">
+                    <td className="px-4 py-3 text-slate-400 dark:text-slate-400">
                       {new Date(user.created_at).toLocaleDateString('id-ID')}
                     </td>
                   </tr>
@@ -155,7 +155,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
               <tr>
                 <td
                   colSpan={5}
-                  className="px-4 py-10 text-center text-slate-400"
+                  className="px-4 py-10 text-center text-slate-400 dark:text-slate-400"
                 >
                   Tidak ada user yang cocok.
                 </td>

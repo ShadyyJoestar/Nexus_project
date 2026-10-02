@@ -19,7 +19,7 @@ export function RoleSelect({
   // Leader tidak bisa diubah lewat admin UI
   if (currentRole === 'leader') {
     return (
-      <span className="inline-flex items-center rounded-lg border border-sky-100 bg-sky-50 px-2.5 py-1.5 text-sm font-medium text-sky-700">
+      <span className="inline-flex items-center rounded-lg border border-sky-100 bg-sky-50 px-2.5 py-1.5 text-sm font-medium text-sky-700 dark:border-slate-700">
         leader
       </span>
     )
@@ -53,7 +53,7 @@ export function RoleSelect({
       value={role}
       disabled={loading}
       onChange={(e) => handleChange(e.target.value)}
-      className="rounded-lg border border-sky-100 bg-white px-2 py-1.5 text-sm text-slate-700 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+      className="rounded-lg border border-sky-100 bg-white px-2 py-1.5 text-sm text-slate-700 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
     >
       <option value="client">client</option>
       <option value="member">member</option>
