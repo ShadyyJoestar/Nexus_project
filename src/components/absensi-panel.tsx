@@ -10,6 +10,7 @@ import type {
   EkskulStudent,
 } from '@/types/database'
 import { Card, Badge, PrimaryButton, Input } from '@/components/ui'
+import SessionRecap from '@/components/session-recap'
 
 const STATUS_OPTIONS: {
   value: AbsensiStatus
@@ -67,6 +68,8 @@ export default function AbsensiPanel({
   const [markAllLoading, setMarkAllLoading] = useState(false)
 
   const activeSession = sessions.find((s) => s.id === activeSessionId) ?? null
+  const activeStudents = students.filter((s) => s.is_active)
+  const inactiveStudents = students.filter((s) => !s.is_active)
 
   const activeRecordsByStudent = useMemo(() => {
     const map = new Map<string, AbsensiRecord>()
@@ -76,22 +79,6 @@ export default function AbsensiPanel({
     }
     return map
   }, [records, activeSessionId])
-
-  const summary = useMemo(() => {
-    const counts: Record<AbsensiStatus, number> = {
-      hadir: 0,
-      izin: 0,
-      sakit: 0,
-      alpha: 0,
-    }
-    const active = students.filter((s) => s.is_active)
-    for (const s of active) {
-      const r = activeRecordsByStudent.get(s.id)
-      const st = r?.status ?? 'alpha'
-      counts[st]++
-    }
-    return { total: active.length, ...counts }
-  }, [students, activeRecordsByStudent])
 
   async function createSession(e: React.FormEvent) {
     e.preventDefault()
@@ -265,52 +252,48 @@ export default function AbsensiPanel({
       `Tandai SEMUA siswa aktif sebagai "${status}" untuk sesi ini?`
     )
     if (!ok) return
+
+    const targets = students.filter((s) => s.is_active)
+    if (targets.length === 0) return
+
     setMarkAllLoading(true)
     const supabase = createClient()
     const {
       data: { user },
     } = await supabase.auth.getUser()
-    const active = students.filter((s) => s.is_active)
+    const now = new Date().toISOString()
 
-    for (const s of active) {
-      const existing = activeRecordsByStudent.get(s.id)
-      if (existing) {
-        const { data, error } = await supabase
-          .from('absensi_records')
-          .update({
-            status,
-            updated_by: user?.id ?? null,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', existing.id)
-          .select('*')
-          .single()
-        if (!error && data) {
-          const row = data as AbsensiRecord
-          setRecords((prev) => prev.map((r) => (r.id === row.id ? row : r)))
-        }
-      } else {
-        const { data, error } = await supabase
-          .from('absensi_records')
-          .insert({
-            session_id: activeSessionId,
-            student_id: s.id,
-            status,
-            updated_by: user?.id ?? null,
-          })
-          .select('*')
-          .single()
-        if (!error && data) {
-          setRecords((prev) => [...prev, data as AbsensiRecord])
-        }
-      }
-    }
+    const { data, error } = await supabase
+      .from('absensi_records')
+      .upsert(
+        targets.map((s) => ({
+          session_id: activeSessionId,
+          student_id: s.id,
+          status,
+          updated_by: user?.id ?? null,
+          updated_at: now,
+        })),
+        { onConflict: 'session_id,student_id' }
+      )
+      .select('*')
     setMarkAllLoading(false)
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    const saved = (data ?? []) as AbsensiRecord[]
+    const savedStudentIds = new Set(saved.map((r) => r.student_id))
+    setRecords((prev) => [
+      ...prev.filter(
+        (r) =>
+          !(r.session_id === activeSessionId && savedStudentIds.has(r.student_id))
+      ),
+      ...saved,
+    ])
     router.refresh()
   }
-
-  const activeStudents = students.filter((s) => s.is_active)
-  const inactiveStudents = students.filter((s) => !s.is_active)
 
   return (
     <div className="space-y-8">
@@ -404,44 +387,13 @@ export default function AbsensiPanel({
           ) : null}
         </Card>
 
-        <Card>
-          <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
-            Ringkasan
-          </h2>
-          {!activeSession ? (
-            <p className="mt-3 text-sm text-slate-400">Pilih / buat sesi dulu.</p>
-          ) : (
-            <div className="mt-4 space-y-2">
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                {summary.total} siswa aktif
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <Badge tone="emerald">Hadir {summary.hadir}</Badge>
-                <Badge tone="sky">Izin {summary.izin}</Badge>
-                <Badge tone="amber">Sakit {summary.sakit}</Badge>
-                <Badge tone="slate">Alpha {summary.alpha}</Badge>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  disabled={markAllLoading || !activeSessionId}
-                  onClick={() => markAll('hadir')}
-                  className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 disabled:opacity-50"
-                >
-                  Semua hadir
-                </button>
-                <button
-                  type="button"
-                  disabled={markAllLoading || !activeSessionId}
-                  onClick={() => markAll('alpha')}
-                  className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-600 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300"
-                >
-                  Semua alpha
-                </button>
-              </div>
-            </div>
-          )}
-        </Card>
+        <SessionRecap
+          session={activeSession}
+          students={activeStudents}
+          recordsByStudent={activeRecordsByStudent}
+          busy={markAllLoading}
+          onMarkAll={markAll}
+        />
       </div>
 
       {/* Attendance grid */}
