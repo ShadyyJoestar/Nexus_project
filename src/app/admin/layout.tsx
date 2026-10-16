@@ -78,6 +78,12 @@ export default async function AdminLayout({
             >
               Absensi
             </Link>
+            <Link
+              href="/admin/statistik"
+              className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-sky-50 hover:text-sky-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-sky-300"
+            >
+              Statistik siswa
+            </Link>
 
             <p className="mb-1 mt-4 hidden px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 lg:block">
               Public site

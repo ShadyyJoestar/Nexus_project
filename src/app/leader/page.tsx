@@ -155,12 +155,20 @@ export default async function LeaderPage({ searchParams }: Props) {
                 Dashboard Leader
               </h1>
             </div>
-            <Link
-              href="/leader/absensi"
-              className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-sky-600 hover:to-teal-500"
-            >
-              Absensi →
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/leader/statistik"
+                className="rounded-xl border border-sky-200 bg-white px-4 py-2.5 text-sm font-semibold text-sky-700 transition hover:bg-sky-50 dark:border-slate-700 dark:bg-slate-900 dark:text-sky-300"
+              >
+                Statistik →
+              </Link>
+              <Link
+                href="/leader/absensi"
+                className="rounded-xl bg-gradient-to-r from-sky-500 to-teal-400 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-sky-600 hover:to-teal-500"
+              >
+                Absensi →
+              </Link>
+            </div>
           </div>
           <p className="mt-2 max-w-2xl text-sm text-slate-600 dark:text-slate-300">
             Kelola profil & project kamu, plus pantau komunitas dan atur role
