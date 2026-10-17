@@ -1,8 +1,12 @@
 import StatistikView from '@/components/statistik-view'
 import { loadStatistik } from '@/lib/statistik'
 
-export default async function AdminStatistikPage() {
-  const { stats, sessionCount, error } = await loadStatistik(['admin'])
+export default async function AdminStatistikPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const data = await loadStatistik(['admin'], (await searchParams).tab)
 
   return (
     <div className="space-y-6">
@@ -11,10 +15,10 @@ export default async function AdminStatistikPage() {
           Statistik siswa
         </h1>
         <p className="mt-1 text-sm text-slate-500 sm:text-base dark:text-slate-400">
-          Rekap kehadiran seluruh siswa ekskul.
+          Kehadiran dan penilaian seluruh siswa ekskul.
         </p>
       </div>
-      <StatistikView stats={stats} sessionCount={sessionCount} error={error} />
+      <StatistikView {...data} />
     </div>
   )
 }

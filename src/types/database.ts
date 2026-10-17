@@ -73,3 +73,17 @@ export type AbsensiRecord = {
   updated_by: string | null
   updated_at: string
 }
+
+// ===== Penilaian =====
+export type PenilaianItem = {
+  id: string
+  title: string
+  max_score: number
+  created_at: string
+}
+
+export type PenilaianScore = {
+  item_id: string
+  student_id: string
+  score: number
+}

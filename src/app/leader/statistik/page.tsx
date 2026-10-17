@@ -5,8 +5,12 @@ import StatistikView from '@/components/statistik-view'
 import { PageShell, Badge } from '@/components/ui'
 import { loadStatistik } from '@/lib/statistik'
 
-export default async function LeaderStatistikPage() {
-  const { stats, sessionCount, error } = await loadStatistik(['leader'])
+export default async function LeaderStatistikPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const data = await loadStatistik(['leader'], (await searchParams).tab)
 
   return (
     <PageShell>
@@ -21,7 +25,7 @@ export default async function LeaderStatistikPage() {
               </h1>
             </div>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-              Rekap kehadiran seluruh siswa ekskul.
+              Kehadiran dan penilaian seluruh siswa ekskul.
             </p>
           </div>
           <Link
@@ -31,7 +35,7 @@ export default async function LeaderStatistikPage() {
             ← Dashboard
           </Link>
         </div>
-        <StatistikView stats={stats} sessionCount={sessionCount} error={error} />
+        <StatistikView {...data} />
       </Container>
     </PageShell>
   )
